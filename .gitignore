@@ -1,0 +1,61 @@
+# dependencies
+hub/node_modules
+hub/.pnp
+hub/.pnp.*
+hub/.yarn/*
+!hub/.yarn/patches
+!hub/.yarn/plugins
+!hub/.yarn/releases
+!hub/.yarn/versions
+
+# testing
+hub/coverage
+
+# next.js
+hub/.next/
+hub/out/
+
+# production
+hub/build
+
+# misc
+hub/.DS_Store
+*hub/.pem
+
+# debug
+hub/npm-debug.log*
+hub/yarn-debug.log*
+hub/yarn-error.log*
+hub/pnpm-debug.log*
+
+# env files
+hub/.env*.local
+
+# typescript
+hub/*.tsbuildinfo
+hub/next-env.d.ts
+
+# Logs
+editor/logs
+editor/*.log
+editor/npm-debug.log*
+editor/yarn-debug.log*
+editor/yarn-error.log*
+editor/pnpm-debug.log*
+editor/lerna-debug.log*
+
+editor/node_modules
+editor/dist
+editor/dist-ssr
+editor/*.local
+
+# Editor directories and files
+editor/.vscode/*
+!editor/.vscode/extensions.json
+editor/.idea
+editor/.DS_Store
+editor/*.suo
+editor/*.ntvs*
+editor/*.njsproj
+editor/*.sln
+editor/*.sw?
