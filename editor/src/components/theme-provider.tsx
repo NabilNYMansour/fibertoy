@@ -2,7 +2,6 @@
 import * as React from "react"
 
 type Theme = "dark" | "light" | "system"
-type ResolvedTheme = "dark" | "light"
 
 type ThemeProviderProps = {
   children: React.ReactNode
@@ -16,40 +15,24 @@ type ThemeProviderState = {
   setTheme: (theme: Theme) => void
 }
 
-const COLOR_SCHEME_QUERY = "(prefers-color-scheme: dark)"
-const THEME_VALUES: Theme[] = ["dark", "light", "system"]
-
 const ThemeProviderContext = React.createContext<
   ThemeProviderState | undefined
 >(undefined)
 
-function isTheme(value: string | null): value is Theme {
-  if (value === null) {
-    return false
-  }
-
-  return THEME_VALUES.includes(value as Theme)
-}
-
-function getSystemTheme(): ResolvedTheme {
-  if (window.matchMedia(COLOR_SCHEME_QUERY).matches) {
-    return "dark"
-  }
-
-  return "light"
-}
-
 function disableTransitionsTemporarily() {
   const style = document.createElement("style")
+
   style.appendChild(
     document.createTextNode(
       "*,*::before,*::after{-webkit-transition:none!important;transition:none!important}"
     )
   )
+
   document.head.appendChild(style)
 
   return () => {
     window.getComputedStyle(document.body)
+
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         style.remove()
@@ -60,97 +43,37 @@ function disableTransitionsTemporarily() {
 
 export function ThemeProvider({
   children,
-  defaultTheme = "system",
-  storageKey = "theme",
   disableTransitionOnChange = true,
   ...props
 }: ThemeProviderProps) {
-  const [theme, setThemeState] = React.useState<Theme>(() => {
-    const storedTheme = localStorage.getItem(storageKey)
-    if (isTheme(storedTheme)) {
-      return storedTheme
-    }
+  const theme: Theme = "dark"
 
-    return defaultTheme
-  })
-
-  const setTheme = React.useCallback(
-    (nextTheme: Theme) => {
-      localStorage.setItem(storageKey, nextTheme)
-      setThemeState(nextTheme)
-    },
-    [storageKey]
-  )
-
-  const applyTheme = React.useCallback(
-    (nextTheme: Theme) => {
-      const root = document.documentElement
-      const resolvedTheme =
-        nextTheme === "system" ? getSystemTheme() : nextTheme
-      const restoreTransitions = disableTransitionOnChange
-        ? disableTransitionsTemporarily()
-        : null
-
-      root.classList.remove("light", "dark")
-      root.classList.add(resolvedTheme)
-
-      if (restoreTransitions) {
-        restoreTransitions()
-      }
-    },
-    [disableTransitionOnChange]
-  )
+  const setTheme = React.useCallback((_theme: Theme) => {
+    // Intentionally noop.
+    // This sandboxed app is always dark mode and does not use localStorage.
+  }, [])
 
   React.useEffect(() => {
-    applyTheme(theme)
+    const root = document.documentElement
+    const restoreTransitions = disableTransitionOnChange
+      ? disableTransitionsTemporarily()
+      : null
 
-    if (theme !== "system") {
-      return undefined
+    root.classList.remove("light", "system")
+    root.classList.add("dark")
+    root.style.colorScheme = "dark"
+
+    if (restoreTransitions) {
+      restoreTransitions()
     }
-
-    const mediaQuery = window.matchMedia(COLOR_SCHEME_QUERY)
-    const handleChange = () => {
-      applyTheme("system")
-    }
-
-    mediaQuery.addEventListener("change", handleChange)
-
-    return () => {
-      mediaQuery.removeEventListener("change", handleChange)
-    }
-  }, [theme, applyTheme])
-
-  React.useEffect(() => {
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.storageArea !== localStorage) {
-        return
-      }
-
-      if (event.key !== storageKey) {
-        return
-      }
-
-      if (isTheme(event.newValue)) {
-        setThemeState(event.newValue)
-        return
-      }
-
-      setThemeState(defaultTheme)
-    }
-
-    window.addEventListener("storage", handleStorageChange)
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange)
-    }
-  }, [defaultTheme, storageKey])
+  }, [disableTransitionOnChange])
 
   const value = React.useMemo(
     () => ({
       theme,
       setTheme,
     }),
-    [theme, setTheme]
+    [setTheme]
   )
 
   return (

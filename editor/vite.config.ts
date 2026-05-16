@@ -11,4 +11,10 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    cors: true,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
+  },
 })
