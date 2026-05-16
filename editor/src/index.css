@@ -144,3 +144,25 @@
 .t-bb {
   @apply border-2 border-blue-500;
 }
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}

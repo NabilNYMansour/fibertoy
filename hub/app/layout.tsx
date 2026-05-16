@@ -1,8 +1,10 @@
-import { Geist, Geist_Mono, Inter } from "next/font/google"
-
 import "./globals.css"
+import { Geist_Mono, Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
+import { ClerkProvider } from "@clerk/nextjs"
+import { shadcn } from "@clerk/themes"
+import Header from "@/components/header"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -28,7 +30,14 @@ export default function RootLayout({
       )}
     >
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ClerkProvider appearance={{ baseTheme: shadcn }}>
+          <ThemeProvider>
+            <div className="flex min-h-svh flex-col">
+              <Header />
+              {children}
+            </div>
+          </ThemeProvider>
+        </ClerkProvider>
       </body>
     </html>
   )

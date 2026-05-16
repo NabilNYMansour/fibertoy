@@ -29,7 +29,7 @@ export function App() {
   }, [])
 
   return (
-    <div className="flex min-h-svh">
+    <div className="flex h-svh">
       {!initialized && (
         <div className="flex w-full items-center justify-center">
           <Loader2 className="animate-spin" />
