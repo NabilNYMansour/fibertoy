@@ -21,7 +21,10 @@ const Header = () => {
             </ClerkLoading>
             <ClerkLoaded>
               <div className="h-7 w-7">
-                <UserButton />
+                <UserButton
+                  userProfileMode="navigation"
+                  userProfileUrl="/user-profile"
+                />
               </div>
             </ClerkLoaded>
           </Show>
