@@ -37,7 +37,7 @@ export default function Page() {
     <div className="flex flex-1">
       <iframe
         src="http://localhost:5173"
-        className="flex-1"
+        className="flex-1 bg-transparent"
         sandbox="allow-scripts"
         onLoad={(event) => {
           const win = event.currentTarget.contentWindow

@@ -44,6 +44,8 @@ const CodeEditor = ({ value, onSave }: CodeEditorProps) => {
         settings: {
           fontFamily: "monospace",
           fontSize: "15px",
+          background: "transparent",
+          gutterBackground: "transparent",
         },
       }),
     []
