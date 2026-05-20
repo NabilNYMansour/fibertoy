@@ -7,7 +7,13 @@ import * as DREI from "@react-three/drei"
 import * as ZUSTAND from "zustand"
 import { Loader2 } from "lucide-react"
 
-const SCOPE = { ...THREE, ...R3F, ...DREI, ...ZUSTAND }
+const SCOPE = {
+  ...THREE,
+  ...R3F,
+  ...DREI,
+  ...ZUSTAND,
+  glsl: (x: string) => x[0],
+}
 
 export function App() {
   const [initialized, setInitialized] = useState(false)
