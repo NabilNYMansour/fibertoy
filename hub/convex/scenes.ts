@@ -1,6 +1,13 @@
 import { mutation, query } from "./_generated/server"
 import { v } from "convex/values"
 
+export type UpdateSceneDataInput = {
+  name?: string
+  description?: string
+  public?: boolean
+  code?: string
+}
+
 export const updateScene = mutation({
   args: {
     sceneId: v.optional(v.id("scenes")),
@@ -14,6 +21,7 @@ export const updateScene = mutation({
   },
   handler: async (ctx, args) => {
     const { sceneId, ownerId, data } = args
+    //---------------- New scene ----------------//
     if (!sceneId) {
       const now = Date.now()
       const cleanData = {
@@ -33,6 +41,7 @@ export const updateScene = mutation({
       })
       return newSceneId
     } else {
+      //---------------- Update scene ----------------//
       const scene = await ctx.db.get(sceneId)
       if (!scene) {
         throw new Error("Scene not found")
@@ -84,13 +93,25 @@ export const deleteScene = mutation({
   handler: async (ctx, args) => {
     const { sceneId, ownerId } = args
     const scene = await ctx.db.get(sceneId)
-    if (!scene) {
+    if (!scene || scene.ownerId !== ownerId) {
       throw new Error("Scene not found")
-    }
-    if (scene.ownerId !== ownerId) {
-      throw new Error("Unauthorized")
     }
     await ctx.db.delete(sceneId)
     return sceneId
+  },
+})
+
+export const getScene = query({
+  args: {
+    sceneId: v.id("scenes"),
+    ownerId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const { sceneId, ownerId } = args
+    const scene = await ctx.db.get("scenes", sceneId)
+    if (!scene || (!scene.public && scene.ownerId !== ownerId)) {
+      throw new Error("Scene not found")
+    }
+    return scene
   },
 })

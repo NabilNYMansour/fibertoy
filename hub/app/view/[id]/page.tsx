@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect, useMemo, useRef, useState } from "react"
-import { useQuery } from "convex/react"
+import { useQuery_experimental as useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
-import { usePathname } from "next/navigation"
+import { usePathname, notFound } from "next/navigation"
 import { Id } from "@/convex/_generated/dataModel"
 import { useUser } from "@clerk/nextjs"
 import { setSceneCode } from "@/hooks/use-scene-store"
@@ -19,10 +19,16 @@ export default function Page() {
     [pathname]
   )
 
-  const code = useQuery(
-    api.codes.getCode,
-    user?.id && sceneId ? { sceneId, ownerId: user.id } : "skip"
-  )
+  const result = useQuery({
+    query: api.codes.getCode,
+    args: sceneId ? { sceneId, ownerId: user?.id } : "skip",
+  })
+
+  if (result.status === "error") {
+    notFound()
+  }
+
+  const code = result.status === "success" ? result.data : undefined
 
   useEffect(() => {
     if (!iframeRef.current || !iframeLoaded || !code) return

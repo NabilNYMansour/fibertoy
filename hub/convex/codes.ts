@@ -4,7 +4,7 @@ import { v } from "convex/values"
 export const getCode = query({
   args: {
     sceneId: v.id("scenes"),
-    ownerId: v.string(),
+    ownerId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const { sceneId, ownerId } = args
