@@ -31,7 +31,7 @@ export default function Page() {
   const code = result.status === "success" ? result.data : undefined
 
   useEffect(() => {
-    if (!iframeRef.current || !iframeLoaded || !code) return
+    if (!iframeRef.current || !iframeLoaded) return
     const win = iframeRef.current.contentWindow
     if (!win) return
     win.postMessage({ type: "initialize" }, "*")
