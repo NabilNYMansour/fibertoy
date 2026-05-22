@@ -3,13 +3,15 @@ import { v } from "convex/values"
 
 export default defineSchema({
   scenes: defineTable({
+    ownerId: v.string(),
     name: v.string(),
-
     description: v.optional(v.string()),
 
     createdAt: v.number(),
     updatedAt: v.number(),
-  }),
+
+    public: v.boolean(),
+  }).index("by_ownerId", ["ownerId"]),
   codes: defineTable({
     sceneId: v.id("scenes"),
     code: v.string(),

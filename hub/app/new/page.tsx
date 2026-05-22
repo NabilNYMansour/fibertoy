@@ -1,5 +1,6 @@
 "use client"
 
+import { setSceneCode } from "@/hooks/use-scene-store"
 import { useEffect, useState } from "react"
 
 const BASE_CODE = `
@@ -26,6 +27,7 @@ export default function Page() {
     const handleMessage = (event: MessageEvent) => {
       if (event.data.type !== "code") return
       setCode(event.data.code)
+      setSceneCode(event.data.code)
     }
     window.addEventListener("message", handleMessage)
     return () => {
@@ -44,6 +46,7 @@ export default function Page() {
           if (!win) return
           win.postMessage({ type: "initialize" }, "*")
           win.postMessage({ type: "code", code }, "*")
+          setSceneCode(code)
         }}
       />
     </div>

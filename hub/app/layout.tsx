@@ -4,6 +4,9 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import { ClerkProvider } from "@clerk/nextjs"
 import Header from "@/components/header"
+import ConvexAppProvider from "@/components/convex-provider"
+import { Toaster } from "@/components/ui/sonner"
+import { ui } from "@clerk/ui"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -29,13 +32,16 @@ export default function RootLayout({
       )}
     >
       <body>
-        <ClerkProvider>
-          <ThemeProvider forcedTheme="dark">
-            <div className="flex min-h-svh flex-col">
-              <Header />
-              {children}
-            </div>
-          </ThemeProvider>
+        <ClerkProvider ui={ui}>
+          <ConvexAppProvider>
+            <ThemeProvider forcedTheme="dark">
+              <div className="flex min-h-svh flex-col">
+                <Header />
+                {children}
+              </div>
+              <Toaster />
+            </ThemeProvider>
+          </ConvexAppProvider>
         </ClerkProvider>
       </body>
     </html>

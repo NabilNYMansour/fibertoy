@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ClerkLoaded, ClerkLoading, Show, UserButton } from "@clerk/nextjs"
+import { ClerkLoaded, ClerkLoading, Show } from "@clerk/nextjs"
 import Link from "next/link"
-import { Separator } from "./ui/separator"
+import { Separator } from "../ui/separator"
 import { Plus } from "lucide-react"
+import Actions from "./actions"
+import ClerkUserButton from "../auth/clerk-user-button"
 
 const Header = () => {
   return (
@@ -14,17 +16,15 @@ const Header = () => {
       </Link>
       <div className="flex gap-2">
         {/*==========={Sign in/up and Clerk button}===========*/}
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           <Show when="signed-in">
             <ClerkLoading>
               <Skeleton className="h-7 w-7 rounded-full" />
             </ClerkLoading>
             <ClerkLoaded>
+              <Actions />
               <div className="h-7 w-7">
-                <UserButton
-                  userProfileMode="navigation"
-                  userProfileUrl="/user-profile"
-                />
+                <ClerkUserButton />
               </div>
             </ClerkLoaded>
           </Show>

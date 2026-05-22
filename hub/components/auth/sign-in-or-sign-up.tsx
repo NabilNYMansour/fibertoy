@@ -13,7 +13,7 @@ const SignInOrSignUp = () => {
   const searchParams = useSearchParams()
   const onSignIn = pathname === "/sign-in"
 
-  const redirectUrl = searchParams.get("redirect_url") || DEFAULT_REDIRECT_URL
+  const redirectUrl = searchParams.get("redirectUrl") || DEFAULT_REDIRECT_URL
 
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center gap-4">
