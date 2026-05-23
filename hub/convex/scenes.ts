@@ -9,6 +9,8 @@ export type UpdateSceneDataInput = {
   code?: string
 }
 
+export const MAX_CODE_LENGTH = 200_000
+
 export const updateScene = mutation({
   args: {
     sceneId: v.optional(v.id("scenes")),
@@ -22,13 +24,20 @@ export const updateScene = mutation({
   },
   handler: async (ctx, args) => {
     const { sceneId, ownerId, data } = args
-    //---------------- New scene ----------------//
-    if (!sceneId) {
+    //---------------- Code length check ----------------//
+    if ((data.code?.length ?? 0) > MAX_CODE_LENGTH) {
+      throw new Error("Code too long")
+    }
+    //---------------- Create new scene ----------------//
+    const createNewScene = async (
+      name: string = "new scene",
+      description: string = ""
+    ) => {
       const now = Date.now()
       const cleanData = {
-        name: data.name ?? "new scene",
-        description: data.description ?? "",
-        public: data.public ?? false,
+        name,
+        description,
+        public: false,
         createdAt: now,
         updatedAt: now,
       }
@@ -41,6 +50,10 @@ export const updateScene = mutation({
         code: data.code ?? "",
       })
       return newSceneId
+    }
+    //---------------- New scene ----------------//
+    if (!sceneId) {
+      return await createNewScene()
     } else {
       //---------------- Update scene ----------------//
       const scene = await ctx.db.get(sceneId)
@@ -48,7 +61,7 @@ export const updateScene = mutation({
         throw new Error("Scene not found")
       }
       if (scene.ownerId !== ownerId) {
-        throw new Error("Unauthorized")
+        return await createNewScene(`${scene.name} fork`, scene.description)
       }
       const { code: codeUpdate, ...sceneFields } = data
       await ctx.db.patch(sceneId, {
@@ -123,14 +136,28 @@ export const deleteScene = mutation({
 export const getScene = query({
   args: {
     sceneId: v.id("scenes"),
-    ownerId: v.string(),
+    ownerId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const { sceneId, ownerId } = args
     const scene = await ctx.db.get("scenes", sceneId)
-    if (!scene || (!scene.public && scene.ownerId !== ownerId)) {
+    const isPublic = scene?.public ?? false
+    const requesterIsOwner = scene?.ownerId === ownerId
+    if (isPublic && !requesterIsOwner) {
+      const cleanData = {
+        ...scene,
+        ownerId: undefined,
+        readOnly: true,
+      }
+      return cleanData
+    }
+    if (!scene || (!isPublic && !requesterIsOwner)) {
       throw new Error("Scene not found")
     }
-    return scene
+    return {
+      ...scene,
+      ownerId: undefined,
+      readOnly: false,
+    }
   },
 })

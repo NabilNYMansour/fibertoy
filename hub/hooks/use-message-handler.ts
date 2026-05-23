@@ -36,9 +36,16 @@ const useMessageHandler = ({
           data: { code },
         })
         toast.success("Saved!", { id: toastId })
-        if (!sceneId) router.push(`/view/${newSceneId}`)
-      } catch {
-        toast.error("Failed to save", { id: toastId })
+        if (sceneId !== newSceneId) router.push(`/view/${newSceneId}`)
+      } catch (error) {
+        const rawErrorMessage =
+          error instanceof Error ? error.message : String(error)
+        const errorMessage = rawErrorMessage
+          .toLowerCase()
+          .includes("code too long")
+          ? "Code too long"
+          : "Failed to save"
+        toast.error(errorMessage, { id: toastId })
       }
     },
     [sceneId, user, updateScene, router]

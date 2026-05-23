@@ -17,12 +17,13 @@ const MainHeader = () => {
       <div className="flex gap-2">
         {/*==========={Sign in/up and Clerk button}===========*/}
         <div className="flex items-center gap-2">
+          <HeaderActions />
+
           <Show when="signed-in">
             <ClerkLoading>
               <Skeleton className="h-7 w-7 rounded-full" />
             </ClerkLoading>
             <ClerkLoaded>
-              <HeaderActions />
               <div className="h-7 w-7">
                 <ClerkUserButton />
               </div>

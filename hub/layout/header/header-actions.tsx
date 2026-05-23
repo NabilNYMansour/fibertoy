@@ -11,6 +11,7 @@ import { UpdateSceneDataInput } from "@/convex/scenes"
 import ErrorRedirect from "../error/error-redirect"
 import PublicEye from "@/components/ui/public-eye"
 import { Separator } from "@/components/ui/separator"
+import SceneInfoDialog from "./scene-info"
 
 const Actions = () => {
   const { user } = useUser()
@@ -24,7 +25,7 @@ const Actions = () => {
 
   const sceneData = useQuery(
     api.scenes.getScene,
-    sceneId && user?.id ? { sceneId, ownerId: user?.id } : "skip"
+    sceneId ? { sceneId, ownerId: user?.id } : "skip"
   )
 
   const handleSubmit = async (sceneData: UpdateSceneDataInput) => {
@@ -38,17 +39,25 @@ const Actions = () => {
     }
   }
 
-  if (!user || !(isView || isNew)) return null
+  if (!isView && isNew) return null
 
   return (
     <div className="flex items-center gap-2">
-      {sceneData && (
+      {sceneData && !sceneData.readOnly && (
         <>
-          <PublicEye isPublic={sceneData.public} />
+          <PublicEye isPublic={!!sceneData.public} />
           <div className="line-clamp-1 max-w-xs pr-2 text-xs">
             {sceneData.name}
           </div>
           <SceneSettingsDialog sceneData={sceneData} onSubmit={handleSubmit} />
+        </>
+      )}
+      {sceneData?.readOnly && (
+        <>
+          <div className="line-clamp-1 max-w-xs pr-2 text-xs">
+            {sceneData.name}
+          </div>
+          <SceneInfoDialog sceneData={sceneData} />
         </>
       )}
       <Separator orientation="vertical" />

@@ -56,14 +56,14 @@ const SceneSettingsDialog = ({
         </DialogHeader>
         <div className="flex flex-col gap-2">
           <div className="flex flex-col gap-1">
-            Name
+            <div className="text-xs text-muted-foreground">Name</div>
             <Input
               value={currentSceneData?.name}
               onChange={(e) => updateCurrentSceneData("name", e.target.value)}
             />
           </div>
           <div className="flex flex-col gap-1">
-            Description
+            <div className="text-xs text-muted-foreground">Description</div>
             <Textarea
               value={currentSceneData?.description}
               onChange={(e) =>
@@ -74,7 +74,7 @@ const SceneSettingsDialog = ({
           <div className="flex justify-between">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                Visibility
+                <div className="text-xs text-muted-foreground">Visibility</div>
                 <PublicEye isPublic={currentSceneData?.public ?? false} />
               </div>
               <Switch
