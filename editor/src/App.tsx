@@ -17,6 +17,7 @@ const SCOPE = {
 
 export function App() {
   const [initialized, setInitialized] = useState(false)
+  const [userExists, setUserExists] = useState(false)
   const [code, setCode] = useState("")
 
   const handleCodeChange = (newCode: string) => {
@@ -35,6 +36,7 @@ export function App() {
       } else if (event.data.type === "initialize") {
         setInitialized(true)
         setCode(event.data.code)
+        setUserExists(event.data.userExists)
       }
     }
     window.addEventListener("message", handleMessage)
@@ -56,7 +58,7 @@ export function App() {
           <div className="w-1/2">
             <CodeEditor
               value={code}
-              onSave={handleCodeChange}
+              onSave={userExists ? handleCodeChange : undefined}
               onCompile={handleCompile}
             />
           </div>

@@ -62,9 +62,9 @@ const useMessageHandler = ({
     }
     const win = iframeRef.current.contentWindow
     if (!win) return
-    win.postMessage({ type: "initialize", code }, "*")
+    win.postMessage({ type: "initialize", code, userExists: !!user?.id }, "*")
     win.postMessage({ type: "code", code }, "*")
-  }, [code, ready, iframeRef])
+  }, [code, ready, iframeRef, user])
 }
 
 export default useMessageHandler

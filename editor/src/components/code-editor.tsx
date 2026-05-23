@@ -60,7 +60,7 @@ const jsxWithGlsl = () => {
 
 interface CodeEditorProps {
   value: string
-  onSave: (value: string) => void
+  onSave?: (value: string) => void
   onCompile: (value: string) => void
 }
 
@@ -80,7 +80,11 @@ const CodeEditor = ({ value, onSave, onCompile }: CodeEditorProps) => {
           key: "Mod-s",
           preventDefault: true,
           run: () => {
-            onSave(currentValue)
+            if (onSave) {
+              onSave(currentValue)
+            } else {
+              onCompile(currentValue)
+            }
             return true
           },
         },
@@ -136,16 +140,22 @@ const CodeEditor = ({ value, onSave, onCompile }: CodeEditorProps) => {
         />
 
         <div className="absolute right-0 bottom-0 z-10 flex flex-col gap-2 p-2 text-sm">
+          {onSave && (
+            <Button
+              onClick={() => onSave(currentValue)}
+              title="Save and compile changes (ctrl+s)"
+            >
+              <Save />
+              Save
+            </Button>
+          )}
           <Button
-            onClick={() => onSave(currentValue)}
-            title="Save and compile changes (ctrl+s)"
-          >
-            <Save />
-            Save
-          </Button>
-          <Button
-            onClick={() => onSave(currentValue)}
-            title="Compile changes (alt+s)"
+            onClick={() => onCompile(currentValue)}
+            title={
+              onSave
+                ? "Compile changes (alt+s)"
+                : "Compile changes (alt+s) or (ctrl+s)"
+            }
           >
             <SquareChevronRight />
             Compile
