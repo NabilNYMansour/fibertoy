@@ -29,14 +29,19 @@ export function App() {
   }
 
   useEffect(() => {
-    window.addEventListener("message", (event) => {
+    const handleMessage = (event: MessageEvent) => {
       if (event.data.type === "code") {
         setCode(event.data.code)
       } else if (event.data.type === "initialize") {
         setInitialized(true)
         setCode(event.data.code)
       }
-    })
+    }
+    window.addEventListener("message", handleMessage)
+    window.parent.postMessage({ type: "ready" }, "*")
+    return () => {
+      window.removeEventListener("message", handleMessage)
+    }
   }, [])
 
   return (

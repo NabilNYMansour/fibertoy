@@ -21,7 +21,18 @@ const MyScenesPage = () => {
 
   const deleteScene = useMutation(api.scenes.deleteScene)
 
-  if (!isLoaded) {
+  const handleDelete = async (sceneId: Id<"scenes">) => {
+    if (!user?.id) return
+    const toastId = toast.loading("Deleting scene...")
+    try {
+      await deleteScene({ sceneId, ownerId: user.id })
+      toast.success("Scene deleted", { id: toastId })
+    } catch {
+      toast.error("Failed to delete scene", { id: toastId })
+    }
+  }
+
+  if (!isLoaded || !scenes) {
     return <BasicLoader />
   }
 
@@ -36,18 +47,7 @@ const MyScenesPage = () => {
     )
   }
 
-  const handleDelete = async (sceneId: Id<"scenes">) => {
-    if (!user.id) return
-    const toastId = toast.loading("Deleting scene...")
-    try {
-      await deleteScene({ sceneId, ownerId: user.id })
-      toast.success("Scene deleted", { id: toastId })
-    } catch {
-      toast.error("Failed to delete scene", { id: toastId })
-    }
-  }
-
-  if (!scenes?.length) {
+  if (scenes?.length === 0) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center">
         <div className="flex flex-col gap-1">
@@ -63,7 +63,7 @@ const MyScenesPage = () => {
 
   return (
     <div className="flex flex-1 flex-col items-center gap-2 p-2">
-      {scenes.map((scene) => (
+      {scenes?.map((scene) => (
         <div key={scene._id} className="flex items-center gap-4">
           <Link href={`/view/${scene._id}`} className="hover:underline">
             {scene.name}

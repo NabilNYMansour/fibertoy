@@ -1,7 +1,7 @@
 "use client"
 
 import useMessageHandler from "@/hooks/use-message-handler"
-import { useState } from "react"
+import { useRef } from "react"
 
 const BASE_CODE = `
 const Main = () => {
@@ -21,23 +21,16 @@ render(<Main />)
 `.trim()
 
 export default function Page() {
-  // this is needed to avoid the iframe not receiving any code
-  const [code] = useState(BASE_CODE)
-
-  useMessageHandler()
+  const iframeRef = useRef<HTMLIFrameElement>(null)
+  useMessageHandler({ iframeRef, code: BASE_CODE })
 
   return (
     <div className="flex flex-1">
       <iframe
+        ref={iframeRef}
         src="http://localhost:5173"
         className="flex-1 bg-transparent"
         sandbox="allow-scripts"
-        onLoad={(event) => {
-          const win = event.currentTarget.contentWindow
-          if (!win) return
-          win.postMessage({ type: "initialize", code }, "*")
-          win.postMessage({ type: "code", code }, "*")
-        }}
       />
     </div>
   )

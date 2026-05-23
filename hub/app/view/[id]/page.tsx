@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useMemo, useRef } from "react"
 import { useQuery_experimental as useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { usePathname, notFound } from "next/navigation"
@@ -10,7 +10,6 @@ import useMessageHandler from "@/hooks/use-message-handler"
 
 export default function Page() {
   const iframeRef = useRef<HTMLIFrameElement>(null)
-  const [iframeLoaded, setIframeLoaded] = useState(false)
   const pathname = usePathname()
   const { user } = useUser()
 
@@ -30,24 +29,15 @@ export default function Page() {
 
   const code = result.status === "success" ? result.data : undefined
 
-  useEffect(() => {
-    if (!iframeRef.current || !iframeLoaded || code === undefined) return
-    const win = iframeRef.current.contentWindow
-    if (!win) return
-    win.postMessage({ type: "initialize", code }, "*")
-    win.postMessage({ type: "code", code }, "*")
-  }, [code, iframeLoaded, user])
-
-  useMessageHandler(sceneId)
+  useMessageHandler({ sceneId, code, iframeRef })
 
   return (
     <div className="flex flex-1">
       <iframe
+        ref={iframeRef}
         src="http://localhost:5173"
         className="flex-1 bg-transparent"
         sandbox="allow-scripts"
-        onLoad={() => setIframeLoaded(true)}
-        ref={iframeRef}
       />
     </div>
   )

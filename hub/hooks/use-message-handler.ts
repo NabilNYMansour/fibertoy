@@ -1,14 +1,24 @@
 "use client"
 
-import { useCallback, useEffect } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { api } from "@/convex/_generated/api"
 import { useMutation } from "convex/react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { Id } from "@/convex/_generated/dataModel"
 import { useUser } from "@clerk/nextjs"
+interface UseMessageHandlerProps {
+  sceneId?: Id<"scenes">
+  code?: string | null
+  iframeRef: React.RefObject<HTMLIFrameElement | null>
+}
+const useMessageHandler = ({
+  sceneId,
+  code,
+  iframeRef,
+}: UseMessageHandlerProps) => {
+  const [ready, setReady] = useState(false)
 
-const useMessageHandler = (sceneId?: Id<"scenes">) => {
   const router = useRouter()
   const updateScene = useMutation(api.scenes.updateScene)
   const { user } = useUser()
@@ -36,6 +46,8 @@ const useMessageHandler = (sceneId?: Id<"scenes">) => {
     const handleMessage = (event: MessageEvent) => {
       if (event.data.type === "code") {
         handleSave(event.data.code)
+      } else if (event.data.type === "ready") {
+        setReady(true)
       }
     }
     window.addEventListener("message", handleMessage)
@@ -43,6 +55,16 @@ const useMessageHandler = (sceneId?: Id<"scenes">) => {
       window.removeEventListener("message", handleMessage)
     }
   }, [handleSave])
+
+  useEffect(() => {
+    if (!iframeRef.current || !ready || code === undefined || code === null) {
+      return
+    }
+    const win = iframeRef.current.contentWindow
+    if (!win) return
+    win.postMessage({ type: "initialize", code }, "*")
+    win.postMessage({ type: "code", code }, "*")
+  }, [code, ready, iframeRef])
 }
 
 export default useMessageHandler
