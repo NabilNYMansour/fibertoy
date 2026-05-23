@@ -48,7 +48,7 @@ export function ThemeProvider({
 }: ThemeProviderProps) {
   const theme: Theme = "dark"
 
-  const setTheme = React.useCallback((_theme: Theme) => {
+  const setTheme = React.useCallback(() => {
     // Intentionally noop.
     // This sandboxed app is always dark mode and does not use localStorage.
   }, [])
