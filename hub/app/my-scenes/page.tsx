@@ -47,30 +47,38 @@ const MyScenesPage = () => {
     }
   }
 
-  return (
-    <div className="flex flex-col items-center gap-2 p-2">
-      {scenes?.length ? (
-        scenes.map((scene) => (
-          <div key={scene._id} className="flex items-center gap-4">
-            <Link href={`/view/${scene._id}`} className="hover:underline">
-              {scene.name}
-            </Link>
-            <div className="flex gap-2">
-              <Button
-                variant="destructive"
-                size="icon-sm"
-                onClick={() => handleDelete(scene._id)}
-              >
-                <Trash />
-              </Button>
-            </div>
-          </div>
-        ))
-      ) : (
-        <div>
-          <p>No scenes found</p>
+  if (!scenes?.length) {
+    return (
+      <div className="flex flex-1 flex-col items-center justify-center">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-xl">No scenes found</h1>
+          <p>Make a new one ᕕ(ᐛ)ᕗ</p>
+          <Link href="/new">
+            <Button>New Scene</Button>
+          </Link>
         </div>
-      )}
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex flex-1 flex-col items-center gap-2 p-2">
+      {scenes.map((scene) => (
+        <div key={scene._id} className="flex items-center gap-4">
+          <Link href={`/view/${scene._id}`} className="hover:underline">
+            {scene.name}
+          </Link>
+          <div className="flex gap-2">
+            <Button
+              variant="destructive"
+              size="icon-sm"
+              onClick={() => handleDelete(scene._id)}
+            >
+              <Trash />
+            </Button>
+          </div>
+        </div>
+      ))}
     </div>
   )
 }
