@@ -16,6 +16,6 @@ export const getCode = query({
       .query("codes")
       .withIndex("by_sceneId", (q) => q.eq("sceneId", sceneId))
       .first()
-    return codeDoc?.code
+    return { code: codeDoc?.code, fork: scene.ownerId !== ownerId }
   },
 })

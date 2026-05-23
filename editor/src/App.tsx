@@ -17,6 +17,7 @@ const SCOPE = {
 
 export function App() {
   const [initialized, setInitialized] = useState(false)
+  const [fork, setFork] = useState(false)
   const [userExists, setUserExists] = useState(false)
   const [code, setCode] = useState("")
 
@@ -37,6 +38,7 @@ export function App() {
         setInitialized(true)
         setCode(event.data.code)
         setUserExists(event.data.userExists)
+        setFork(event.data.fork)
       }
     }
     window.addEventListener("message", handleMessage)
@@ -60,6 +62,7 @@ export function App() {
               value={code}
               onSave={userExists ? handleCodeChange : undefined}
               onCompile={handleCompile}
+              fork={fork}
             />
           </div>
           <div className="w-1/2">

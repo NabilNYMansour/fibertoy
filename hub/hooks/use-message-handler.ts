@@ -12,12 +12,14 @@ interface UseMessageHandlerProps {
   sceneId?: Id<"scenes">
   code?: string | null
   iframeRef: React.RefObject<HTMLIFrameElement | null>
+  fork?: boolean
 }
 
 const useMessageHandler = ({
   sceneId,
   code,
   iframeRef,
+  fork,
 }: UseMessageHandlerProps) => {
   const [ready, setReady] = useState(false)
 
@@ -72,9 +74,12 @@ const useMessageHandler = ({
     }
     const win = iframeRef.current.contentWindow
     if (!win) return
-    win.postMessage({ type: "initialize", code, userExists: !!user?.id }, "*")
+    win.postMessage(
+      { type: "initialize", code, userExists: !!user?.id, fork },
+      "*"
+    )
     win.postMessage({ type: "code", code }, "*")
-  }, [code, ready, iframeRef, user])
+  }, [code, ready, iframeRef, user, fork])
 }
 
 export default useMessageHandler

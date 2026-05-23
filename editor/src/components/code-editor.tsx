@@ -9,7 +9,7 @@ import { parseMixed } from "@lezer/common"
 import { useMemo, useRef, useState } from "react"
 import { Button } from "./ui/button"
 import { auraInit } from "@uiw/codemirror-theme-aura"
-import { Save, SquareChevronRight } from "lucide-react"
+import { GitFork, Save, SquareChevronRight } from "lucide-react"
 
 const jsxWithGlsl = () => {
   const language = LRLanguage.define({
@@ -62,9 +62,10 @@ interface CodeEditorProps {
   value: string
   onSave?: (value: string) => void
   onCompile: (value: string) => void
+  fork: boolean
 }
 
-const CodeEditor = ({ value, onSave, onCompile }: CodeEditorProps) => {
+const CodeEditor = ({ value, onSave, onCompile, fork }: CodeEditorProps) => {
   const ref = useRef<ReactCodeMirrorRef>(null)
   const [currentValue, setCurrentValue] = useState<string>(value)
 
@@ -145,8 +146,17 @@ const CodeEditor = ({ value, onSave, onCompile }: CodeEditorProps) => {
               onClick={() => onSave(currentValue)}
               title="Save and compile changes (ctrl+s)"
             >
-              <Save />
-              Save
+              {fork ? (
+                <>
+                  <GitFork />
+                  Fork
+                </>
+              ) : (
+                <>
+                  <Save />
+                  Save
+                </>
+              )}
             </Button>
           )}
           <Button
