@@ -9,7 +9,7 @@ const UserProfilePage = () => {
   const router = useRouter()
 
   useEffect(() => {
-    if (!isSignedIn) {
+    if (isSignedIn === false) {
       router.push("/")
     }
   }, [isSignedIn, router])

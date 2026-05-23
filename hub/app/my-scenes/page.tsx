@@ -3,13 +3,55 @@
 import BasicLoader from "@/components/loaders/basic-loader"
 import ErrorRedirect from "@/layout/error/error-redirect"
 import { Button } from "@/components/ui/button"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import { api } from "@/convex/_generated/api"
-import { Id } from "@/convex/_generated/dataModel"
+import { Doc, Id } from "@/convex/_generated/dataModel"
 import { useUser } from "@clerk/nextjs"
 import { useMutation, useQuery } from "convex/react"
-import { Trash } from "lucide-react"
+import { ExternalLink, Trash } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
+import PublicEye from "@/components/ui/public-eye"
+
+function formatUpdatedAt(updatedAt: number) {
+  return new Intl.DateTimeFormat(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(updatedAt))
+}
+
+const SceneRowActions = ({
+  scene,
+  onDelete,
+}: {
+  scene: Doc<"scenes">
+  onDelete: (sceneId: Id<"scenes">) => void | Promise<void>
+}) => {
+  return (
+    <div className="flex flex-wrap items-center justify-end gap-2">
+      <Button size="icon-sm" variant="outline" asChild>
+        <Link href={`/view/${scene._id}`}>
+          <ExternalLink data-icon="inline-start" />
+        </Link>
+      </Button>
+      <Button
+        variant="destructive"
+        size="icon-sm"
+        onClick={() => onDelete(scene._id)}
+        aria-label={`Delete ${scene.name}`}
+      >
+        <Trash />
+      </Button>
+    </div>
+  )
+}
 
 const MyScenesPage = () => {
   const { isSignedIn, user, isLoaded } = useUser()
@@ -62,24 +104,54 @@ const MyScenesPage = () => {
   }
 
   return (
-    <div className="flex flex-1 flex-col items-center gap-2 p-2">
-      {scenes?.map((scene) => (
-        <div key={scene._id} className="flex items-center gap-4">
-          <Link href={`/view/${scene._id}`} className="hover:underline">
-            {scene.name}
-          </Link>
-          <div className="flex gap-2">
-            <Button
-              variant="destructive"
-              size="icon-sm"
-              onClick={() => handleDelete(scene._id)}
-            >
-              <Trash />
-            </Button>
-          </div>
-        </div>
-      ))}
-    </div>
+    <Table>
+      <TableHeader>
+        <TableRow className="hover:bg-transparent">
+          <TableHead>Name</TableHead>
+          <TableHead className="hidden sm:table-cell">Last updated</TableHead>
+          <TableHead className="hidden sm:table-cell">Created at</TableHead>
+          <TableHead className="hidden md:table-cell">Visibility</TableHead>
+          <TableHead className="text-right">Actions</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {scenes.map((scene) => (
+          <TableRow key={scene._id}>
+            <TableCell className="max-w-48 font-medium sm:max-w-none">
+              <Link
+                href={`/view/${scene._id}`}
+                className="hover:text-primary hover:underline"
+              >
+                <div className="flex items-center gap-1">
+                  <div className="sm:hidden">
+                    <PublicEye isPublic={scene.public} />
+                  </div>
+                  {scene.name}
+                </div>
+              </Link>
+              <div className="text-xs text-muted-foreground sm:hidden">
+                {formatUpdatedAt(scene.updatedAt)}
+              </div>
+            </TableCell>
+            <TableCell className="hidden text-xs text-muted-foreground sm:table-cell">
+              {formatUpdatedAt(scene.updatedAt)}
+            </TableCell>
+            <TableCell className="hidden text-xs text-muted-foreground sm:table-cell">
+              {formatUpdatedAt(scene.createdAt)}
+            </TableCell>
+            <TableCell className="hidden text-xs md:table-cell">
+              <div className="flex items-center gap-1">
+                <PublicEye isPublic={scene.public} />
+                {scene.public ? "Public" : "Private"}
+              </div>
+            </TableCell>
+            <TableCell className="text-right">
+              <SceneRowActions scene={scene} onDelete={handleDelete} />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   )
 }
 
