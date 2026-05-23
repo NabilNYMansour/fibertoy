@@ -27,12 +27,13 @@ const useMessageHandler = ({
 
   const handleSave = useCallback(
     async (code: string) => {
-      if (!user?.id) return
+      if (!user?.id || !user.username) return
       const toastId = toast.loading("Saving...")
       try {
         const newSceneId = await updateScene({
           sceneId,
           ownerId: user.id,
+          username: user.username,
           data: { code },
         })
         toast.success("Saved!", { id: toastId })

@@ -7,6 +7,7 @@ export type UpdateSceneDataInput = {
   description?: string
   public?: boolean
   code?: string
+  username?: string
 }
 
 export const MAX_CODE_LENGTH = 200_000
@@ -15,6 +16,7 @@ export const updateScene = mutation({
   args: {
     sceneId: v.optional(v.id("scenes")),
     ownerId: v.string(),
+    username: v.string(),
     data: v.object({
       name: v.optional(v.string()),
       description: v.optional(v.string()),
@@ -23,7 +25,7 @@ export const updateScene = mutation({
     }),
   },
   handler: async (ctx, args) => {
-    const { sceneId, ownerId, data } = args
+    const { sceneId, ownerId, username, data } = args
     //---------------- Code length check ----------------//
     if ((data.code?.length ?? 0) > MAX_CODE_LENGTH) {
       throw new Error("Code too long")
@@ -43,6 +45,7 @@ export const updateScene = mutation({
       }
       const newSceneId = await ctx.db.insert("scenes", {
         ownerId,
+        username,
         ...cleanData,
       })
       await ctx.db.insert("codes", {
@@ -87,33 +90,70 @@ export const updateScene = mutation({
   },
 })
 
-const INDEX_BY_MY_SCENES_SORT = {
+const INDEX_BY_SCENES_SORT = {
   name: "by_ownerId_and_name",
   updatedAt: "by_ownerId_and_updatedAt",
   createdAt: "by_ownerId_and_createdAt",
   public: "by_ownerId_and_public",
 } as const
 
+/** Index names for listings filtered to `public === true` (second field is the sort key). */
+const INDEX_BROWSE_SCENES_SORT = {
+  name: "by_public_and_name",
+  updatedAt: "by_public_and_updatedAt",
+  createdAt: "by_public_and_createdAt",
+} as const
+
+const sortByValidator = v.union(
+  v.literal("name"),
+  v.literal("updatedAt"),
+  v.literal("createdAt"),
+  v.literal("public")
+)
+
+const browseSortByValidator = v.union(
+  v.literal("name"),
+  v.literal("updatedAt"),
+  v.literal("createdAt")
+)
+
 export const listMyScenesPaginated = query({
   args: {
     ownerId: v.string(),
-    sortBy: v.union(
-      v.literal("name"),
-      v.literal("updatedAt"),
-      v.literal("createdAt"),
-      v.literal("public")
-    ),
+    sortBy: sortByValidator,
     sortDirection: v.union(v.literal("asc"), v.literal("desc")),
     paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
     const { ownerId, sortBy, sortDirection, paginationOpts } = args
-    const indexName = INDEX_BY_MY_SCENES_SORT[sortBy]
+    const indexName = INDEX_BY_SCENES_SORT[sortBy]
     return await ctx.db
       .query("scenes")
       .withIndex(indexName, (q) => q.eq("ownerId", ownerId))
       .order(sortDirection)
       .paginate(paginationOpts)
+  },
+})
+
+export const listBrowseScenesPaginated = query({
+  args: {
+    sortBy: browseSortByValidator,
+    sortDirection: v.union(v.literal("asc"), v.literal("desc")),
+    paginationOpts: paginationOptsValidator,
+  },
+  handler: async (ctx, args) => {
+    const { sortBy, sortDirection, paginationOpts } = args
+    const indexName = INDEX_BROWSE_SCENES_SORT[sortBy]
+    const page = await ctx.db
+      .query("scenes")
+      .withIndex(indexName, (q) => q.eq("public", true))
+      .order(sortDirection)
+      .paginate(paginationOpts)
+
+    return {
+      ...page,
+      page: page.page.map((scene) => ({ ...scene, ownerId: undefined })),
+    }
   },
 })
 

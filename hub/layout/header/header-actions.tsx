@@ -29,10 +29,15 @@ const Actions = () => {
   )
 
   const handleSubmit = async (sceneData: UpdateSceneDataInput) => {
-    if (!user) return
+    if (!user || !user.username) return
     const toastId = toast.loading("Saving...")
     try {
-      await updateScene({ sceneId, ownerId: user.id, data: sceneData })
+      await updateScene({
+        sceneId,
+        ownerId: user.id,
+        data: sceneData,
+        username: user.username,
+      })
       toast.success("Saved!", { id: toastId })
     } catch {
       toast.error("Failed to save", { id: toastId })

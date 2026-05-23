@@ -30,7 +30,11 @@ const SceneInfoDialog = ({ sceneData }: SceneInfoDialogProps) => {
         <div className="flex flex-col gap-2">
           <div className="flex flex-col gap-1">
             <div className="text-xs text-muted-foreground">Name</div>
-            <div>{sceneData?.name}</div>
+            <div className="flex items-baseline gap-2">
+              <div>{sceneData?.name}</div>
+              <div className="text-xs text-muted-foreground">by</div>
+              <div>{sceneData?.username}</div>
+            </div>
           </div>
           <div className="flex flex-col gap-1">
             <div className="text-xs text-muted-foreground">Description</div>

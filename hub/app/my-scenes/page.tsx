@@ -193,7 +193,7 @@ const MyScenesPage = () => {
       <div className="flex flex-1 flex-col items-center justify-center">
         <div className="flex flex-col gap-1">
           <h1 className="text-xl">No scenes found</h1>
-          <p>Make a new one ᕕ(ᐛ)ᕗ</p>
+          <p className="text-sm text-muted-foreground">Make a new one ᕕ(ᐛ)ᕗ</p>
           <Link href="/new">
             <Button>New Scene</Button>
           </Link>
