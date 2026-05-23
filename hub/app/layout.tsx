@@ -3,7 +3,7 @@ import { Geist_Mono, Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import { ClerkProvider } from "@clerk/nextjs"
-import Header from "@/components/header"
+import MainHeader from "@/layout/header/main-header"
 import ConvexAppProvider from "@/components/convex-provider"
 import { Toaster } from "@/components/ui/sonner"
 import { ui } from "@clerk/ui"
@@ -36,7 +36,7 @@ export default function RootLayout({
           <ConvexAppProvider>
             <ThemeProvider forcedTheme="dark">
               <div className="flex min-h-svh flex-col">
-                <Header />
+                <MainHeader />
                 {children}
               </div>
               <Toaster />

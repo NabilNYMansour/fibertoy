@@ -2,12 +2,12 @@ import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ClerkLoaded, ClerkLoading, Show } from "@clerk/nextjs"
 import Link from "next/link"
-import { Separator } from "../ui/separator"
+import { Separator } from "@/components/ui/separator"
 import { Plus } from "lucide-react"
 import HeaderActions from "./header-actions"
-import ClerkUserButton from "../auth/clerk-user-button"
+import ClerkUserButton from "@/components/auth/clerk-user-button"
 
-const Header = () => {
+const MainHeader = () => {
   return (
     <header className="flex items-center justify-between border-b px-2 py-1">
       {/*==========={Title}===========*/}
@@ -65,4 +65,4 @@ const Header = () => {
   )
 }
 
-export default Header
+export default MainHeader

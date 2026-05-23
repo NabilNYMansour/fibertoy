@@ -1,6 +1,6 @@
 "use client"
 
-import ErrorPageComponent from "../components/errors/error-page-component"
+import ErrorPageComponent from "../layout/error/error-page-component"
 
 const ErrorPage = () => {
   return <ErrorPageComponent />

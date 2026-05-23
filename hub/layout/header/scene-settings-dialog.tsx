@@ -1,7 +1,7 @@
 "use client"
 
 import { Settings } from "lucide-react"
-import { Button } from "../ui/button"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -9,12 +9,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from "../ui/input"
+import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import { UpdateSceneDataInput } from "@/convex/scenes"
-import { Textarea } from "../ui/textarea"
-import { Switch } from "../ui/switch"
-import PublicEye from "../ui/public-eye"
+import { Textarea } from "@/components/ui/textarea"
+import { Switch } from "@/components/ui/switch"
+import PublicEye from "@/components/ui/public-eye"
 
 interface SceneSettingsDialogProps {
   sceneData: UpdateSceneDataInput

@@ -1,7 +1,7 @@
 "use client"
 
 import BasicLoader from "@/components/basic-loader"
-import ErrorRedirect from "@/components/errors/error-redirect"
+import ErrorRedirect from "@/layout/error/error-redirect"
 import { Button } from "@/components/ui/button"
 import { api } from "@/convex/_generated/api"
 import { Id } from "@/convex/_generated/dataModel"

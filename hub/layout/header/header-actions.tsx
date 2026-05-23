@@ -8,9 +8,9 @@ import { Id } from "@/convex/_generated/dataModel"
 import { toast } from "sonner"
 import SceneSettingsDialog from "./scene-settings-dialog"
 import { UpdateSceneDataInput } from "@/convex/scenes"
-import { Separator } from "../ui/separator"
-import PublicEye from "../ui/public-eye"
-import ErrorRedirect from "../errors/error-redirect"
+import ErrorRedirect from "../error/error-redirect"
+import PublicEye from "@/components/ui/public-eye"
+import { Separator } from "@/components/ui/separator"
 
 const Actions = () => {
   const { user } = useUser()
