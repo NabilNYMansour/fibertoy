@@ -74,6 +74,13 @@ export const updateScene = mutation({
   },
 })
 
+const INDEX_BY_MY_SCENES_SORT = {
+  name: "by_ownerId_and_name",
+  updatedAt: "by_ownerId_and_updatedAt",
+  createdAt: "by_ownerId_and_createdAt",
+  public: "by_ownerId_and_public",
+} as const
+
 export const listMyScenesPaginated = query({
   args: {
     ownerId: v.string(),
@@ -88,37 +95,12 @@ export const listMyScenesPaginated = query({
   },
   handler: async (ctx, args) => {
     const { ownerId, sortBy, sortDirection, paginationOpts } = args
-
-    switch (sortBy) {
-      case "name":
-        return await ctx.db
-          .query("scenes")
-          .withIndex("by_ownerId_and_name", (q) => q.eq("ownerId", ownerId))
-          .order(sortDirection)
-          .paginate(paginationOpts)
-      case "updatedAt":
-        return await ctx.db
-          .query("scenes")
-          .withIndex("by_ownerId_and_updatedAt", (q) =>
-            q.eq("ownerId", ownerId)
-          )
-          .order(sortDirection)
-          .paginate(paginationOpts)
-      case "createdAt":
-        return await ctx.db
-          .query("scenes")
-          .withIndex("by_ownerId_and_createdAt", (q) =>
-            q.eq("ownerId", ownerId)
-          )
-          .order(sortDirection)
-          .paginate(paginationOpts)
-      case "public":
-        return await ctx.db
-          .query("scenes")
-          .withIndex("by_ownerId_and_public", (q) => q.eq("ownerId", ownerId))
-          .order(sortDirection)
-          .paginate(paginationOpts)
-    }
+    const indexName = INDEX_BY_MY_SCENES_SORT[sortBy]
+    return await ctx.db
+      .query("scenes")
+      .withIndex(indexName, (q) => q.eq("ownerId", ownerId))
+      .order(sortDirection)
+      .paginate(paginationOpts)
   },
 })
 
