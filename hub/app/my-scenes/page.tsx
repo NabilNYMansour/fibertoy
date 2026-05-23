@@ -1,6 +1,7 @@
 "use client"
 
 import BasicLoader from "@/components/basic-loader"
+import ErrorRedirect from "@/components/errors/error-redirect"
 import { Button } from "@/components/ui/button"
 import { api } from "@/convex/_generated/api"
 import { Id } from "@/convex/_generated/dataModel"
@@ -38,8 +39,12 @@ const MyScenesPage = () => {
   const handleDelete = async (sceneId: Id<"scenes">) => {
     if (!user.id) return
     const toastId = toast.loading("Deleting scene...")
-    await deleteScene({ sceneId, ownerId: user.id })
-    toast.success("Scene deleted", { id: toastId })
+    try {
+      await deleteScene({ sceneId, ownerId: user.id })
+      toast.success("Scene deleted", { id: toastId })
+    } catch {
+      toast.error("Failed to delete scene", { id: toastId })
+    }
   }
 
   return (
@@ -63,11 +68,17 @@ const MyScenesPage = () => {
         ))
       ) : (
         <div>
-          <p>No scenes found.</p>
+          <p>No scenes found</p>
         </div>
       )}
     </div>
   )
 }
 
-export default MyScenesPage
+export default function Page() {
+  return (
+    <ErrorRedirect>
+      <MyScenesPage />
+    </ErrorRedirect>
+  )
+}

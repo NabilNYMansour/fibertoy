@@ -138,20 +138,14 @@ const CodeEditor = ({ value, onSave, onCompile }: CodeEditorProps) => {
         <div className="absolute right-0 bottom-0 z-10 flex flex-col gap-2 p-2 text-sm">
           <Button
             onClick={() => onSave(currentValue)}
-            title={
-              isCodeChanged ? "Save changes (ctrl+s)" : "No changes to save"
-            }
+            title="Save and compile changes (ctrl+s)"
           >
             <Save />
             Save
           </Button>
           <Button
             onClick={() => onSave(currentValue)}
-            title={
-              isCodeChanged
-                ? "Compile changes (alt+s)"
-                : "No changes to compile"
-            }
+            title="Compile changes (alt+s)"
           >
             <SquareChevronRight />
             Compile

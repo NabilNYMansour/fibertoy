@@ -10,6 +10,7 @@ import SceneSettingsDialog from "./scene-settings-dialog"
 import { UpdateSceneDataInput } from "@/convex/scenes"
 import { Separator } from "../ui/separator"
 import PublicEye from "../ui/public-eye"
+import ErrorRedirect from "../errors/error-redirect"
 
 const Actions = () => {
   const { user } = useUser()
@@ -29,8 +30,12 @@ const Actions = () => {
   const handleSubmit = async (sceneData: UpdateSceneDataInput) => {
     if (!user) return
     const toastId = toast.loading("Saving...")
-    await updateScene({ sceneId, ownerId: user.id, data: sceneData })
-    toast.success("Saved!", { id: toastId })
+    try {
+      await updateScene({ sceneId, ownerId: user.id, data: sceneData })
+      toast.success("Saved!", { id: toastId })
+    } catch {
+      toast.error("Failed to save", { id: toastId })
+    }
   }
 
   if (!user || !(isView || isNew)) return null
@@ -51,4 +56,10 @@ const Actions = () => {
   )
 }
 
-export default Actions
+export default function HeaderActions() {
+  return (
+    <ErrorRedirect>
+      <Actions />
+    </ErrorRedirect>
+  )
+}

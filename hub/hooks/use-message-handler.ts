@@ -17,14 +17,16 @@ const useMessageHandler = (sceneId?: Id<"scenes">) => {
     async (code: string) => {
       if (!user?.id) return
       const toastId = toast.loading("Saving...")
-      const newSceneId = await updateScene({
-        sceneId,
-        ownerId: user.id,
-        data: { code },
-      })
-      toast.success("Saved!", { id: toastId })
-      if (!sceneId) {
-        router.push(`/view/${newSceneId}`)
+      try {
+        const newSceneId = await updateScene({
+          sceneId,
+          ownerId: user.id,
+          data: { code },
+        })
+        toast.success("Saved!", { id: toastId })
+        if (!sceneId) router.push(`/view/${newSceneId}`)
+      } catch {
+        toast.error("Failed to save", { id: toastId })
       }
     },
     [sceneId, user, updateScene, router]
