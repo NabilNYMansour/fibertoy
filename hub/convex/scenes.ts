@@ -1,4 +1,5 @@
 import { mutation, query } from "./_generated/server"
+import { paginationOptsValidator } from "convex/server"
 import { v } from "convex/values"
 
 export type UpdateSceneDataInput = {
@@ -73,15 +74,51 @@ export const updateScene = mutation({
   },
 })
 
-export const getUserScenes = query({
-  args: { ownerId: v.string() },
+export const listMyScenesPaginated = query({
+  args: {
+    ownerId: v.string(),
+    sortBy: v.union(
+      v.literal("name"),
+      v.literal("updatedAt"),
+      v.literal("createdAt"),
+      v.literal("public")
+    ),
+    sortDirection: v.union(v.literal("asc"), v.literal("desc")),
+    paginationOpts: paginationOptsValidator,
+  },
   handler: async (ctx, args) => {
-    const { ownerId } = args
-    const scenes = await ctx.db
-      .query("scenes")
-      .withIndex("by_ownerId", (q) => q.eq("ownerId", ownerId))
-      .collect()
-    return scenes
+    const { ownerId, sortBy, sortDirection, paginationOpts } = args
+
+    switch (sortBy) {
+      case "name":
+        return await ctx.db
+          .query("scenes")
+          .withIndex("by_ownerId_and_name", (q) => q.eq("ownerId", ownerId))
+          .order(sortDirection)
+          .paginate(paginationOpts)
+      case "updatedAt":
+        return await ctx.db
+          .query("scenes")
+          .withIndex("by_ownerId_and_updatedAt", (q) =>
+            q.eq("ownerId", ownerId)
+          )
+          .order(sortDirection)
+          .paginate(paginationOpts)
+      case "createdAt":
+        return await ctx.db
+          .query("scenes")
+          .withIndex("by_ownerId_and_createdAt", (q) =>
+            q.eq("ownerId", ownerId)
+          )
+          .order(sortDirection)
+          .paginate(paginationOpts)
+      case "public":
+        return await ctx.db
+          .query("scenes")
+          .withIndex("by_ownerId_and_public", (q) => q.eq("ownerId", ownerId))
+          .order(sortDirection)
+          .paginate(paginationOpts)
+    }
   },
 })
 
