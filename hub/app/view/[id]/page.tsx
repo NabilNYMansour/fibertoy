@@ -6,7 +6,7 @@ import { api } from "@/convex/_generated/api"
 import { usePathname, notFound } from "next/navigation"
 import { Id } from "@/convex/_generated/dataModel"
 import { useUser } from "@clerk/nextjs"
-import { setSceneCode } from "@/hooks/use-scene-store"
+import useMessageHandler from "@/hooks/use-message-handler"
 
 export default function Page() {
   const iframeRef = useRef<HTMLIFrameElement>(null)
@@ -31,23 +31,14 @@ export default function Page() {
   const code = result.status === "success" ? result.data : undefined
 
   useEffect(() => {
-    if (!iframeRef.current || !iframeLoaded) return
+    if (!iframeRef.current || !iframeLoaded || code === undefined) return
     const win = iframeRef.current.contentWindow
     if (!win) return
-    win.postMessage({ type: "initialize" }, "*")
+    win.postMessage({ type: "initialize", code }, "*")
     win.postMessage({ type: "code", code }, "*")
-  }, [code, iframeLoaded])
+  }, [code, iframeLoaded, user])
 
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (event.data.type !== "code") return
-      setSceneCode(event.data.code)
-    }
-    window.addEventListener("message", handleMessage)
-    return () => {
-      window.removeEventListener("message", handleMessage)
-    }
-  }, [])
+  useMessageHandler(sceneId)
 
   return (
     <div className="flex flex-1">

@@ -4,7 +4,7 @@ import { ClerkLoaded, ClerkLoading, Show } from "@clerk/nextjs"
 import Link from "next/link"
 import { Separator } from "../ui/separator"
 import { Plus } from "lucide-react"
-import Actions from "./actions"
+import HeaderActions from "./header-actions"
 import ClerkUserButton from "../auth/clerk-user-button"
 
 const Header = () => {
@@ -22,7 +22,7 @@ const Header = () => {
               <Skeleton className="h-7 w-7 rounded-full" />
             </ClerkLoading>
             <ClerkLoaded>
-              <Actions />
+              <HeaderActions />
               <div className="h-7 w-7">
                 <ClerkUserButton />
               </div>

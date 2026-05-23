@@ -1,7 +1,7 @@
 "use client"
 
-import { setSceneCode } from "@/hooks/use-scene-store"
-import { useEffect, useState } from "react"
+import useMessageHandler from "@/hooks/use-message-handler"
+import { useState } from "react"
 
 const BASE_CODE = `
 const Main = () => {
@@ -21,19 +21,10 @@ render(<Main />)
 `.trim()
 
 export default function Page() {
-  const [code, setCode] = useState(BASE_CODE)
+  // this is needed to avoid the iframe not receiving any code
+  const [code] = useState(BASE_CODE)
 
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (event.data.type !== "code") return
-      setCode(event.data.code)
-      setSceneCode(event.data.code)
-    }
-    window.addEventListener("message", handleMessage)
-    return () => {
-      window.removeEventListener("message", handleMessage)
-    }
-  }, [])
+  useMessageHandler()
 
   return (
     <div className="flex flex-1">
@@ -44,9 +35,8 @@ export default function Page() {
         onLoad={(event) => {
           const win = event.currentTarget.contentWindow
           if (!win) return
-          win.postMessage({ type: "initialize" }, "*")
+          win.postMessage({ type: "initialize", code }, "*")
           win.postMessage({ type: "code", code }, "*")
-          setSceneCode(code)
         }}
       />
     </div>

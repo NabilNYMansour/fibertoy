@@ -1,6 +1,6 @@
 "use client"
 
-import { Info } from "lucide-react"
+import { Settings } from "lucide-react"
 import { Button } from "../ui/button"
 import {
   Dialog,
@@ -16,12 +16,15 @@ import { Textarea } from "../ui/textarea"
 import { Switch } from "../ui/switch"
 import PublicEye from "../ui/public-eye"
 
-interface SceneInfoDialogProps {
+interface SceneSettingsDialogProps {
   sceneData: UpdateSceneDataInput
   onSubmit: (sceneData: UpdateSceneDataInput) => void
 }
 
-const SceneInfoDialog = ({ sceneData, onSubmit }: SceneInfoDialogProps) => {
+const SceneSettingsDialog = ({
+  sceneData,
+  onSubmit,
+}: SceneSettingsDialogProps) => {
   const [currentSceneData, setCurrentSceneData] = useState(sceneData)
 
   const updateCurrentSceneData = (
@@ -44,7 +47,7 @@ const SceneInfoDialog = ({ sceneData, onSubmit }: SceneInfoDialogProps) => {
     <Dialog>
       <DialogTrigger asChild>
         <Button size="icon-sm" variant="secondary">
-          <Info />
+          <Settings />
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -89,4 +92,4 @@ const SceneInfoDialog = ({ sceneData, onSubmit }: SceneInfoDialogProps) => {
   )
 }
 
-export default SceneInfoDialog
+export default SceneSettingsDialog

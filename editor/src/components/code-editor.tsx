@@ -9,7 +9,7 @@ import { parseMixed } from "@lezer/common"
 import { useMemo, useRef, useState } from "react"
 import { Button } from "./ui/button"
 import { auraInit } from "@uiw/codemirror-theme-aura"
-import { SquareChevronRight } from "lucide-react"
+import { Save, SquareChevronRight } from "lucide-react"
 
 const jsxWithGlsl = () => {
   const language = LRLanguage.define({
@@ -61,9 +61,10 @@ const jsxWithGlsl = () => {
 interface CodeEditorProps {
   value: string
   onSave: (value: string) => void
+  onCompile: (value: string) => void
 }
 
-const CodeEditor = ({ value, onSave }: CodeEditorProps) => {
+const CodeEditor = ({ value, onSave, onCompile }: CodeEditorProps) => {
   const ref = useRef<ReactCodeMirrorRef>(null)
   const [currentValue, setCurrentValue] = useState<string>(value)
 
@@ -83,9 +84,17 @@ const CodeEditor = ({ value, onSave }: CodeEditorProps) => {
             return true
           },
         },
+        {
+          key: "Alt-s",
+          preventDefault: true,
+          run: () => {
+            onCompile(currentValue)
+            return true
+          },
+        },
       ]),
     ]
-  }, [currentValue, onSave])
+  }, [currentValue, onSave, onCompile])
 
   const theme = useMemo(() => {
     return auraInit({
@@ -129,10 +138,18 @@ const CodeEditor = ({ value, onSave }: CodeEditorProps) => {
         <div className="absolute right-0 bottom-0 z-10 flex flex-col gap-2 p-2 text-sm">
           <Button
             onClick={() => onSave(currentValue)}
-            disabled={!isCodeChanged}
+            title={
+              isCodeChanged ? "Save changes (ctrl+s)" : "No changes to save"
+            }
+          >
+            <Save />
+            Save
+          </Button>
+          <Button
+            onClick={() => onSave(currentValue)}
             title={
               isCodeChanged
-                ? "Compile changes (ctrl+s)"
+                ? "Compile changes (alt+s)"
                 : "No changes to compile"
             }
           >

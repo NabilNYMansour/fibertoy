@@ -24,12 +24,17 @@ export function App() {
     window.parent.postMessage({ type: "code", code: newCode }, "*")
   }
 
+  const handleCompile = (newCode: string) => {
+    setCode(newCode)
+  }
+
   useEffect(() => {
     window.addEventListener("message", (event) => {
       if (event.data.type === "code") {
         setCode(event.data.code)
       } else if (event.data.type === "initialize") {
         setInitialized(true)
+        setCode(event.data.code)
       }
     })
   }, [])
@@ -44,7 +49,11 @@ export function App() {
       {initialized && (
         <LiveProvider noInline code={code} scope={SCOPE}>
           <div className="w-1/2">
-            <CodeEditor value={code} onSave={handleCodeChange} />
+            <CodeEditor
+              value={code}
+              onSave={handleCodeChange}
+              onCompile={handleCompile}
+            />
           </div>
           <div className="w-1/2">
             <LivePreviewWrapper />
