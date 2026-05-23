@@ -4,7 +4,7 @@ import { usePathname, useSearchParams } from "next/navigation"
 import { SignIn, SignUp } from "@clerk/nextjs"
 import dynamic from "next/dynamic"
 import { Suspense } from "react"
-import BasicLoader from "../basic-loader"
+import BasicLoader from "../loaders/basic-loader"
 
 const DEFAULT_REDIRECT_URL = "/"
 

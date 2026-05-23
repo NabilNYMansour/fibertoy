@@ -1,10 +1,10 @@
 import "./globals.css"
 import { Geist_Mono, Inter } from "next/font/google"
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/providers/theme-provider"
 import { cn } from "@/lib/utils"
 import { ClerkProvider } from "@clerk/nextjs"
 import MainHeader from "@/layout/header/main-header"
-import ConvexAppProvider from "@/components/convex-provider"
+import ConvexAppProvider from "@/components/providers/convex-provider"
 import { Toaster } from "@/components/ui/sonner"
 import { ui } from "@clerk/ui"
 
