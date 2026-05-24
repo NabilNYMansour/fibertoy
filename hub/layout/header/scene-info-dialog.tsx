@@ -46,6 +46,10 @@ const SceneInfoDialog = ({ sceneData }: SceneInfoDialogProps) => {
               )}
             </div>
           </div>
+          <div className="flex items-baseline gap-1">
+            <div className="text-xs text-muted-foreground">Views</div>
+            <div>{sceneData.views}</div>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

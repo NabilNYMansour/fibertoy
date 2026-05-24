@@ -1,7 +1,7 @@
 "use client"
 
-import { useMemo, useRef } from "react"
-import { useQuery_experimental as useQuery } from "convex/react"
+import { useEffect, useMemo, useRef } from "react"
+import { useMutation, useQuery_experimental as useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { usePathname, notFound } from "next/navigation"
 import { Id } from "@/convex/_generated/dataModel"
@@ -22,6 +22,12 @@ export default function Page() {
     query: api.codes.getCode,
     args: sceneId ? { sceneId, ownerId: user?.id } : "skip",
   })
+
+  const incrementResult = useMutation(api.scenes.incrementSceneViews)
+
+  useEffect(() => {
+    incrementResult({ sceneId })
+  }, [sceneId, incrementResult])
 
   if (result.status === "error") {
     notFound()

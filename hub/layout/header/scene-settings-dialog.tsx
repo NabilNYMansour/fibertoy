@@ -72,18 +72,22 @@ const SceneSettingsDialog = ({
               }
             />
           </div>
-          <div className="flex justify-between">
+          <div className="flex flex-col gap-2">
+            <div className="text-xs text-muted-foreground">Visibility</div>
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <div className="text-xs text-muted-foreground">Visibility</div>
-                <PublicEye isPublic={currentSceneData?.public ?? false} />
-              </div>
               <Switch
                 checked={currentSceneData?.public ?? false}
                 onCheckedChange={(checked) =>
                   updateCurrentSceneData("public", checked)
                 }
               />
+              <PublicEye isPublic={currentSceneData?.public ?? false} />
+            </div>
+          </div>
+          <div className="flex items-baseline justify-between">
+            <div className="flex items-baseline gap-1">
+              <div className="text-xs text-muted-foreground">Views</div>
+              <div>{sceneData.views}</div>
             </div>
             <Button onClick={handleSubmit}>Submit</Button>
           </div>

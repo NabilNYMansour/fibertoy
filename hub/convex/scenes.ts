@@ -8,6 +8,7 @@ export type UpdateSceneDataInput = {
   public?: boolean
   code?: string
   username?: string
+  views?: number
 }
 
 export const MAX_CODE_LENGTH = 200_000
@@ -42,6 +43,7 @@ export const updateScene = mutation({
         public: false,
         createdAt: now,
         updatedAt: now,
+        views: 0,
       }
       const newSceneId = await ctx.db.insert("scenes", {
         ownerId,
@@ -97,7 +99,6 @@ const INDEX_BY_SCENES_SORT = {
   public: "by_ownerId_and_public",
 } as const
 
-/** Index names for listings filtered to `public === true` (second field is the sort key). */
 const INDEX_BROWSE_SCENES_SORT = {
   name: "by_public_and_name",
   updatedAt: "by_public_and_updatedAt",
@@ -199,5 +200,22 @@ export const getScene = query({
       ownerId: undefined,
       readOnly: false,
     }
+  },
+})
+
+export const incrementSceneViews = mutation({
+  args: { sceneId: v.id("scenes") },
+  handler: async (ctx, args) => {
+    const { sceneId } = args
+
+    const scene = await ctx.db.get(sceneId)
+
+    if (!scene) {
+      throw new Error("Scene not found")
+    }
+
+    await ctx.db.patch(sceneId, {
+      views: scene.views + 1,
+    })
   },
 })

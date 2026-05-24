@@ -11,7 +11,7 @@ import { UpdateSceneDataInput } from "@/convex/scenes"
 import ErrorRedirect from "../error/error-redirect"
 import PublicEye from "@/components/ui/public-eye"
 import { Separator } from "@/components/ui/separator"
-import SceneInfoDialog from "./scene-info"
+import SceneInfoDialog from "./scene-info-dialog"
 
 const Actions = () => {
   const { user } = useUser()

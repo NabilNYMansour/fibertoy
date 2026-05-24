@@ -71,7 +71,7 @@ export function BrowseScenes() {
   const showLoadMore = status === "CanLoadMore" || status === "LoadingMore"
 
   return (
-    <div className="flex flex-col gap-6 px-4 pt-4 pb-10 sm:px-6">
+    <div className="flex flex-col gap-2 p-2">
       <BrowseSortToggle
         sortBy={sortBy}
         sortDirection={sortDirection}
