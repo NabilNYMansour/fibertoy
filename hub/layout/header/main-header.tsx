@@ -9,12 +9,12 @@ import ClerkUserButton from "@/components/auth/clerk-user-button"
 
 const MainHeader = () => {
   return (
-    <header className="flex items-center justify-between border-b px-2 py-1">
+    <header className="flex flex-col justify-between gap-2 border-b px-2 py-1 md:flex-row md:items-center">
       {/*==========={Title}===========*/}
       <Link href="/" className="text-2xl font-semibold">
         FiberToy
       </Link>
-      <div className="flex gap-2">
+      <div className="flex justify-end gap-2">
         {/*==========={Sign in/up and Clerk button}===========*/}
         <div className="flex items-center gap-2">
           <HeaderActions />

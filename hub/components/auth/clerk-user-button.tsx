@@ -9,7 +9,7 @@ const ClerkUserButton = () => {
       <UserButton.MenuItems>
         <UserButton.Link
           label="My Scenes"
-          labelIcon={<Files className="h-5 w-4" />}
+          labelIcon={<Files className="h-4 w-4" />}
           href="/my-scenes"
         />
       </UserButton.MenuItems>
