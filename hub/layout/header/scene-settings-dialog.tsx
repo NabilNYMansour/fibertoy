@@ -19,13 +19,16 @@ import PublicEye from "@/components/ui/public-eye"
 interface SceneSettingsDialogProps {
   sceneData: UpdateSceneDataInput
   onSubmit: (sceneData: UpdateSceneDataInput) => Promise<void>
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
 const SceneSettingsDialog = ({
   sceneData,
   onSubmit,
+  open,
+  onOpenChange,
 }: SceneSettingsDialogProps) => {
-  const [open, setOpen] = useState(false)
   const [currentSceneData, setCurrentSceneData] = useState(sceneData)
 
   const updateCurrentSceneData = (
@@ -41,11 +44,11 @@ const SceneSettingsDialog = ({
       description: currentSceneData.description?.trim(),
       public: currentSceneData.public,
     }
-    onSubmit(cleanSceneData).then(() => setOpen(false))
+    onSubmit(cleanSceneData)
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button size="icon-sm" variant="secondary">
           <Settings />

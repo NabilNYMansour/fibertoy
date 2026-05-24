@@ -8,12 +8,15 @@ import { Id } from "@/convex/_generated/dataModel"
 import { toast } from "sonner"
 import SceneSettingsDialog from "./scene-settings-dialog"
 import { UpdateSceneDataInput } from "@/convex/scenes"
-import ErrorRedirect from "../error/error-redirect"
 import PublicEye from "@/components/ui/public-eye"
 import { Separator } from "@/components/ui/separator"
 import SceneInfoDialog from "./scene-info-dialog"
+import { ErrorBoundary } from "react-error-boundary"
+import { useState } from "react"
 
 const Actions = () => {
+  const [open, setOpen] = useState(false)
+
   const { user } = useUser()
   const updateScene = useMutation(api.scenes.updateScene)
 
@@ -39,6 +42,7 @@ const Actions = () => {
         username: user.username,
       })
       toast.success("Saved!", { id: toastId })
+      setOpen(false)
     } catch {
       toast.error("Failed to save", { id: toastId })
     }
@@ -54,7 +58,12 @@ const Actions = () => {
           <div className="line-clamp-1 max-w-xs pr-2 text-xs">
             {sceneData.name}
           </div>
-          <SceneSettingsDialog sceneData={sceneData} onSubmit={handleSubmit} />
+          <SceneSettingsDialog
+            sceneData={sceneData}
+            onSubmit={handleSubmit}
+            open={open}
+            onOpenChange={setOpen}
+          />
         </>
       )}
       {sceneData?.readOnly && (
@@ -72,8 +81,8 @@ const Actions = () => {
 
 export default function HeaderActions() {
   return (
-    <ErrorRedirect>
+    <ErrorBoundary fallback={<></>}>
       <Actions />
-    </ErrorRedirect>
+    </ErrorBoundary>
   )
 }
