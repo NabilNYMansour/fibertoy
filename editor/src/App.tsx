@@ -5,7 +5,9 @@ import * as THREE from "three"
 import * as R3F from "@react-three/fiber"
 import * as DREI from "@react-three/drei"
 import * as ZUSTAND from "zustand"
-import { Loader2 } from "lucide-react"
+import { ArrowLeftToLine, ArrowRightFromLine, Loader2 } from "lucide-react"
+import { cn } from "./lib/utils"
+import { Button } from "./components/ui/button"
 
 const SCOPE = {
   ...THREE,
@@ -20,6 +22,7 @@ export function App() {
   const [fork, setFork] = useState(false)
   const [userExists, setUserExists] = useState(false)
   const [code, setCode] = useState("")
+  const [noCodeView, setNoCodeView] = useState(false)
 
   const handleCodeChange = (newCode: string) => {
     setCode(newCode)
@@ -56,25 +59,38 @@ export function App() {
         </div>
       )}
       {initialized && (
-        <LiveProvider noInline code={code} scope={SCOPE}>
-          <div className="w-1/2">
-            <CodeEditor
-              value={code}
-              onSave={userExists ? handleCodeChange : undefined}
-              onCompile={handleCompile}
-              fork={fork}
-            />
-          </div>
-          <div className="w-1/2">
-            <LivePreviewWrapper />
-          </div>
-        </LiveProvider>
+        <>
+          <LiveProvider noInline code={code} scope={SCOPE}>
+            <div className={cn(noCodeView ? "w-0" : "w-1/2")}>
+              <CodeEditor
+                value={code}
+                onSave={userExists ? handleCodeChange : undefined}
+                onCompile={handleCompile}
+                fork={fork}
+              />
+            </div>
+            <div className={cn(noCodeView ? "w-full" : "w-1/2")}>
+              <LivePreviewWrapper
+                setNoCodeView={setNoCodeView}
+                noCodeView={noCodeView}
+              />
+            </div>
+          </LiveProvider>
+        </>
       )}
     </div>
   )
 }
 
-function LivePreviewWrapper() {
+interface LivePreviewWrapperProps {
+  setNoCodeView: React.Dispatch<React.SetStateAction<boolean>>
+  noCodeView: boolean
+}
+
+function LivePreviewWrapper({
+  setNoCodeView,
+  noCodeView,
+}: LivePreviewWrapperProps) {
   const { error } = useContext(LiveContext)
   return (
     <div className="relative flex h-full w-full">
@@ -87,6 +103,15 @@ function LivePreviewWrapper() {
           </div>
         </div>
       )}
+      <Button
+        className="absolute top-1 left-1"
+        size="icon-xs"
+        variant="outline"
+        onClick={() => setNoCodeView(!noCodeView)}
+        title={noCodeView ? "Show code" : "Hide code"}
+      >
+        {noCodeView ? <ArrowRightFromLine /> : <ArrowLeftToLine />}
+      </Button>
     </div>
   )
 }

@@ -145,22 +145,23 @@ const CodeEditor = ({ value, onSave, onCompile, fork }: CodeEditorProps) => {
             <Button
               onClick={() => onSave(currentValue)}
               title="Save and compile changes (ctrl+s)"
+              size="icon"
             >
               {fork ? (
                 <>
                   <GitFork />
-                  Fork
                 </>
               ) : (
                 <>
                   <Save />
-                  Save
                 </>
               )}
             </Button>
           )}
           <Button
             onClick={() => onCompile(currentValue)}
+            className="flex items-center"
+            size="icon"
             title={
               onSave
                 ? "Compile changes (alt+s)"
@@ -168,7 +169,6 @@ const CodeEditor = ({ value, onSave, onCompile, fork }: CodeEditorProps) => {
             }
           >
             <SquareChevronRight />
-            Compile
           </Button>
         </div>
       </div>
