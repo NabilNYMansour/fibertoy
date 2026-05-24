@@ -147,15 +147,7 @@ const CodeEditor = ({ value, onSave, onCompile, fork }: CodeEditorProps) => {
               title="Save and compile changes (ctrl+s)"
               size="icon"
             >
-              {fork ? (
-                <>
-                  <GitFork />
-                </>
-              ) : (
-                <>
-                  <Save />
-                </>
-              )}
+              {fork ? <GitFork /> : <Save />}
             </Button>
           )}
           <Button
