@@ -149,6 +149,8 @@ export function ScenesTable() {
                 </Link>
                 <div className="text-xs text-muted-foreground sm:hidden">
                   {formatSceneDateTime(scene.updatedAt)}
+                  {" · "}
+                  {scene.views} views
                 </div>
               </TableCell>
               <TableCell className="hidden text-xs text-muted-foreground sm:table-cell">
@@ -156,6 +158,9 @@ export function ScenesTable() {
               </TableCell>
               <TableCell className="hidden text-xs text-muted-foreground sm:table-cell">
                 {formatSceneDateTime(scene.createdAt)}
+              </TableCell>
+              <TableCell className="hidden text-right text-xs tabular-nums sm:table-cell">
+                {scene.views}
               </TableCell>
               <TableCell className="hidden text-xs md:table-cell">
                 <div className="flex items-center gap-1">

@@ -9,6 +9,7 @@ const SORT_LABELS: { column: BrowseSortColumn; label: string }[] = [
   { column: "name", label: "Name" },
   { column: "updatedAt", label: "Updated" },
   { column: "createdAt", label: "Created" },
+  { column: "views", label: "Views" },
 ]
 
 export function BrowseSortToggle({

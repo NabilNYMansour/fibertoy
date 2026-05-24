@@ -140,20 +140,12 @@ const CodeEditor = ({ value, onSave, onCompile, fork }: CodeEditorProps) => {
           theme={theme}
         />
 
-        <div className="absolute right-0 bottom-0 z-10 flex flex-col gap-2 p-2 text-sm">
-          {onSave && (
-            <Button
-              onClick={() => onSave(currentValue)}
-              title="Save and compile changes (ctrl+s)"
-              size="icon"
-            >
-              {fork ? <GitFork /> : <Save />}
-            </Button>
-          )}
+        <div className="absolute right-0 bottom-0 z-10 flex flex-col items-end gap-2 p-2 text-sm">
           <Button
             onClick={() => onCompile(currentValue)}
             className="flex items-center"
             size="icon"
+            variant="secondary"
             title={
               onSave
                 ? "Compile changes (alt+s)"
@@ -162,6 +154,24 @@ const CodeEditor = ({ value, onSave, onCompile, fork }: CodeEditorProps) => {
           >
             <SquareChevronRight />
           </Button>
+          {onSave && (
+            <Button
+              onClick={() => onSave(currentValue)}
+              title="Save and compile changes (ctrl+s)"
+            >
+              {fork ? (
+                <>
+                  <GitFork />
+                  Fork
+                </>
+              ) : (
+                <>
+                  <Save />
+                  Save
+                </>
+              )}
+            </Button>
+          )}
         </div>
       </div>
     </>

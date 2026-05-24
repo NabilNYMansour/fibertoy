@@ -102,25 +102,29 @@ const INDEX_BY_SCENES_SORT = {
   updatedAt: "by_ownerId_and_updatedAt",
   createdAt: "by_ownerId_and_createdAt",
   public: "by_ownerId_and_public",
+  views: "by_ownerId_and_views",
 } as const
 
 const INDEX_BROWSE_SCENES_SORT = {
   name: "by_public_and_name",
   updatedAt: "by_public_and_updatedAt",
   createdAt: "by_public_and_createdAt",
+  views: "by_public_and_views",
 } as const
 
 const sortByValidator = v.union(
   v.literal("name"),
   v.literal("updatedAt"),
   v.literal("createdAt"),
-  v.literal("public")
+  v.literal("public"),
+  v.literal("views")
 )
 
 const browseSortByValidator = v.union(
   v.literal("name"),
   v.literal("updatedAt"),
-  v.literal("createdAt")
+  v.literal("createdAt"),
+  v.literal("views")
 )
 
 export const listMyScenesPaginated = query({

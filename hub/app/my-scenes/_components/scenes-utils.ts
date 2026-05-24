@@ -1,4 +1,9 @@
-export type MyScenesSortColumn = "name" | "updatedAt" | "createdAt" | "public"
+export type MyScenesSortColumn =
+  | "name"
+  | "updatedAt"
+  | "createdAt"
+  | "public"
+  | "views"
 
 export type SortDirection = "asc" | "desc"
 

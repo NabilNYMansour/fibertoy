@@ -64,5 +64,10 @@ export const SCENES_TABLE_HEADERS: {
     column: "createdAt",
     className: "hidden sm:table-cell",
   },
+  {
+    label: "Views",
+    column: "views",
+    className: "hidden sm:table-cell text-right tabular-nums",
+  },
   { label: "Public", column: "public", className: "hidden sm:table-cell" },
 ]

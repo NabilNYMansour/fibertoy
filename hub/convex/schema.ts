@@ -20,9 +20,11 @@ export default defineSchema({
     .index("by_ownerId_and_updatedAt", ["ownerId", "updatedAt"])
     .index("by_ownerId_and_createdAt", ["ownerId", "createdAt"])
     .index("by_ownerId_and_public", ["ownerId", "public"])
+    .index("by_ownerId_and_views", ["ownerId", "views"])
     .index("by_public_and_name", ["public", "name"])
     .index("by_public_and_updatedAt", ["public", "updatedAt"])
-    .index("by_public_and_createdAt", ["public", "createdAt"]),
+    .index("by_public_and_createdAt", ["public", "createdAt"])
+    .index("by_public_and_views", ["public", "views"]),
   codes: defineTable({
     sceneId: v.id("scenes"),
     code: v.string(),
