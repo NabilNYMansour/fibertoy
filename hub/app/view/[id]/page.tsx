@@ -35,7 +35,7 @@ export default function Page() {
 
   const data = result.status === "success" ? result.data : undefined
 
-  useMessageHandler({ sceneId, code: data?.code, fork: data?.fork, iframeRef })
+  useMessageHandler({ iframeRef, sceneId, code: data?.code, fork: data?.fork })
 
   return (
     <div className="flex flex-1">
