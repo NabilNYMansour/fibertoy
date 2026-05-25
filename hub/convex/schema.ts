@@ -10,6 +10,7 @@ export default defineSchema({
     description: v.optional(v.string()),
 
     views: v.number(),
+    likes: v.number(),
 
     createdAt: v.number(),
     updatedAt: v.number(),
@@ -21,12 +22,20 @@ export default defineSchema({
     .index("by_ownerId_and_createdAt", ["ownerId", "createdAt"])
     .index("by_ownerId_and_public", ["ownerId", "public"])
     .index("by_ownerId_and_views", ["ownerId", "views"])
+    .index("by_ownerId_and_likes", ["ownerId", "likes"])
     .index("by_public_and_name", ["public", "name"])
     .index("by_public_and_updatedAt", ["public", "updatedAt"])
     .index("by_public_and_createdAt", ["public", "createdAt"])
-    .index("by_public_and_views", ["public", "views"]),
+    .index("by_public_and_views", ["public", "views"])
+    .index("by_public_and_likes", ["public", "likes"]),
   codes: defineTable({
     sceneId: v.id("scenes"),
     code: v.string(),
   }).index("by_sceneId", ["sceneId"]),
+  userSceneLikes: defineTable({
+    userId: v.string(),
+    sceneId: v.id("scenes"),
+  })
+    .index("by_sceneId", ["sceneId"])
+    .index("by_userId_and_sceneId", ["userId", "sceneId"]),
 })

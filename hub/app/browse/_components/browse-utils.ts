@@ -3,6 +3,7 @@ export type BrowseSortColumn =
   | "updatedAt"
   | "createdAt"
   | "views"
+  | "likes"
 
 export type SortDirection = "asc" | "desc"
 

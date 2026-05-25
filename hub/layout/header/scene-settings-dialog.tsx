@@ -88,9 +88,15 @@ const SceneSettingsDialog = ({
             </div>
           </div>
           <div className="flex items-baseline justify-between">
-            <div className="flex items-baseline gap-1">
-              <div className="text-xs text-muted-foreground">Views</div>
-              <div>{sceneData.views}</div>
+            <div className="flex gap-2">
+              <div className="flex items-baseline gap-1">
+                <div className="text-xs text-muted-foreground">Views</div>
+                <div>{sceneData.views}</div>
+              </div>
+              <div className="flex items-baseline gap-1">
+                <div className="text-xs text-muted-foreground">Likes</div>
+                <div>{sceneData.likes}</div>
+              </div>
             </div>
             <Button onClick={handleSubmit}>Submit</Button>
           </div>

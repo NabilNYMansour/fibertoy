@@ -4,6 +4,7 @@ export type MyScenesSortColumn =
   | "createdAt"
   | "public"
   | "views"
+  | "likes"
 
 export type SortDirection = "asc" | "desc"
 

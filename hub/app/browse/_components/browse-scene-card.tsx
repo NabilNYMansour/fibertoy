@@ -1,6 +1,6 @@
 import type { Doc } from "@/convex/_generated/dataModel"
 import { formatSceneDateTime } from "@/lib/format-scene-datetime"
-import { Box, Eye } from "lucide-react"
+import { Box, Eye, Heart } from "lucide-react"
 import Link from "next/link"
 
 export type BrowseSceneRow = Omit<Doc<"scenes">, "ownerId">
@@ -32,8 +32,14 @@ export function BrowseSceneCard({ scene }: { scene: BrowseSceneRow }) {
           <span className="pt-1 text-[11px] text-muted-foreground">
             Updated {formatSceneDateTime(scene.updatedAt)}
           </span>
-          <span className="flex gap-1 text-[11px] text-muted-foreground">
-            <Eye className="size-4" /> {scene.views}
+          <span className="flex items-center gap-2 text-[11px] text-muted-foreground">
+            <span className="inline-flex items-center gap-0.5">
+              <Eye className="size-4" aria-hidden /> {scene.views}
+            </span>
+            <span className="inline-flex items-center gap-0.5">
+              <Heart className="size-4" aria-hidden />{" "}
+              {scene.likes}
+            </span>
           </span>
         </div>
       </div>

@@ -13,6 +13,9 @@ import { Separator } from "@/components/ui/separator"
 import SceneInfoDialog from "./scene-info-dialog"
 import { ErrorBoundary } from "react-error-boundary"
 import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Heart } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 const Actions = () => {
   const [open, setOpen] = useState(false)
@@ -48,10 +51,36 @@ const Actions = () => {
     }
   }
 
+  const toggleLikeScene = useMutation(api.scenes.toggleLikeScene)
+
+  const handleLike = async () => {
+    if (!user) return
+    const toastId = toast.loading("Loading...")
+    try {
+      const result = await toggleLikeScene({
+        userId: user.id,
+        sceneId: sceneId!,
+      })
+      toast.success(`${result ? "Liked" : "Unliked"} scene!`, { id: toastId })
+    } catch {
+      toast.error("Something went wrong", { id: toastId })
+    }
+  }
+
+  const hasLiked = useQuery(
+    api.scenes.getUserLikedScene,
+    user?.id && sceneId ? { userId: user.id, sceneId: sceneId } : "skip"
+  )
+
   if (!isView && isNew) return null
 
   return (
     <div className="flex items-center gap-2">
+      {user?.id && sceneId && (
+        <Button onClick={handleLike} variant="ghost" size="icon">
+          <Heart className={cn("h-4 w-4", { "fill-white": hasLiked })} />
+        </Button>
+      )}
       {sceneData && !sceneData.readOnly && (
         <>
           <PublicEye isPublic={!!sceneData.public} />
