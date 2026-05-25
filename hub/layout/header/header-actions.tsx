@@ -17,13 +17,16 @@ import { Button } from "@/components/ui/button"
 import { Heart } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-const Actions = () => {
+interface ActionsProps {
+  pathname: string
+}
+
+const Actions = ({ pathname }: ActionsProps) => {
   const [open, setOpen] = useState(false)
 
   const { user } = useUser()
   const updateScene = useMutation(api.scenes.updateScene)
 
-  const pathname = usePathname()
   const isView = pathname.includes("/view/")
   const isNew = pathname.includes("/new")
 
@@ -109,9 +112,10 @@ const Actions = () => {
 }
 
 export default function HeaderActions() {
+  const pathname = usePathname()
   return (
-    <ErrorBoundary fallback={<></>}>
-      <Actions />
+    <ErrorBoundary fallback={<></>} key={pathname}>
+      <Actions pathname={pathname} />
     </ErrorBoundary>
   )
 }

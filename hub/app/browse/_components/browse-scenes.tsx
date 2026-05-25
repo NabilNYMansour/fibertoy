@@ -7,13 +7,13 @@ import { api } from "@/convex/_generated/api"
 import { usePaginatedQuery } from "convex/react"
 import Link from "next/link"
 import { useCallback, useState } from "react"
-import { BrowseSceneCard, type BrowseSceneRow } from "./browse-scene-card"
 import { BrowseSortToggle } from "./browse-sort-toggle"
 import {
   type BrowseSortColumn,
   defaultBrowseSortDirection,
   type SortDirection,
 } from "./browse-utils"
+import { SceneCard } from "@/components/scene-card"
 
 const PAGE_SIZE = 8
 
@@ -46,7 +46,7 @@ export function BrowseScenes() {
     [sortBy]
   )
 
-  const rows = scenes as BrowseSceneRow[]
+  const rows = scenes
 
   if (status === "LoadingFirstPage") {
     return <BasicLoader />
@@ -81,7 +81,7 @@ export function BrowseScenes() {
       <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {rows.map((scene) => (
           <li key={scene._id}>
-            <BrowseSceneCard scene={scene} />
+            <SceneCard scene={scene} />
           </li>
         ))}
       </ul>

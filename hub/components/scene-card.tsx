@@ -3,9 +3,9 @@ import { formatSceneDateTime } from "@/lib/format-scene-datetime"
 import { Box, Eye, Heart } from "lucide-react"
 import Link from "next/link"
 
-export type BrowseSceneRow = Omit<Doc<"scenes">, "ownerId">
+export type SceneCardProps = Omit<Doc<"scenes">, "ownerId">
 
-export function BrowseSceneCard({ scene }: { scene: BrowseSceneRow }) {
+export function SceneCard({ scene }: { scene: SceneCardProps }) {
   return (
     <Link
       href={`/view/${scene._id}`}
@@ -37,8 +37,7 @@ export function BrowseSceneCard({ scene }: { scene: BrowseSceneRow }) {
               <Eye className="size-4" aria-hidden /> {scene.views}
             </span>
             <span className="inline-flex items-center gap-0.5">
-              <Heart className="size-4" aria-hidden />{" "}
-              {scene.likes}
+              <Heart className="size-4" aria-hidden /> {scene.likes}
             </span>
           </span>
         </div>
