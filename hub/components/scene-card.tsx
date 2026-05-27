@@ -3,7 +3,9 @@ import { formatSceneDateTime } from "@/lib/format-scene-datetime"
 import { Box, Eye, Heart } from "lucide-react"
 import Link from "next/link"
 
-export type SceneCardScene = Omit<Doc<"scenes">, "ownerId">
+export type SceneCardScene = Omit<Doc<"scenes">, "ownerId"> & {
+  username: string
+}
 
 export function SceneCard({ scene }: { scene: SceneCardScene }) {
   return (

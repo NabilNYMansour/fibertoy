@@ -61,6 +61,17 @@ export const updateScene = mutation({
         sceneId: newSceneId,
         code: data.code ?? "",
       })
+      // Lazily create user if not exists
+      const user = await ctx.db
+        .query("users")
+        .withIndex("by_clerkId", (q) => q.eq("clerkId", ownerId))
+        .first()
+      if (!user) {
+        await ctx.db.insert("users", {
+          clerkId: ownerId,
+          username,
+        })
+      }
       return newSceneId
     }
     //---------------- New scene ----------------//
@@ -78,6 +89,7 @@ export const updateScene = mutation({
       const { code: codeUpdate, ...sceneFields } = data
       await ctx.db.patch(sceneId, {
         ...sceneFields,
+        username,
         updatedAt: Date.now(),
       })
       if (codeUpdate !== undefined) {
@@ -244,6 +256,13 @@ export const deleteScene = mutation({
     for (const like of likes) {
       await ctx.db.delete(like._id)
     }
+    const codes = await ctx.db
+      .query("codes")
+      .withIndex("by_sceneId", (q) => q.eq("sceneId", sceneId))
+      .collect()
+    for (const code of codes) {
+      await ctx.db.delete(code._id)
+    }
     await ctx.db.delete(sceneId)
     return sceneId
   },
@@ -275,6 +294,28 @@ export const getScene = query({
       ownerId: undefined,
       readOnly: false,
     }
+  },
+})
+
+export const getUserPublicScenes = query({
+  args: { username: v.string() },
+  handler: async (ctx, args) => {
+    const { username } = args
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_username", (q) => q.eq("username", username))
+      .first()
+    if (!user) {
+      throw new Error("User not found")
+    }
+    const clerkId = user.clerkId
+    const scenes = await ctx.db
+      .query("scenes")
+      .withIndex("by_ownerId_and_public", (q) =>
+        q.eq("ownerId", clerkId).eq("public", true)
+      )
+      .collect()
+    return scenes
   },
 })
 
