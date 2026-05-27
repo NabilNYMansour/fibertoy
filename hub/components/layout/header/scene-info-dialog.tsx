@@ -10,6 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { UpdateSceneDataInput } from "@/convex/scenes"
+import Link from "next/link"
 
 interface SceneInfoDialogProps {
   sceneData: UpdateSceneDataInput
@@ -33,7 +34,12 @@ const SceneInfoDialog = ({ sceneData }: SceneInfoDialogProps) => {
             <div className="flex items-baseline gap-2">
               <div>{sceneData?.name}</div>
               <div className="text-xs text-muted-foreground">by</div>
-              <div>{sceneData?.username}</div>
+              <Link
+                href={`/user/${sceneData?.username}`}
+                className="hover:underline"
+              >
+                {sceneData?.username}
+              </Link>
             </div>
           </div>
           <div className="flex flex-col gap-1">

@@ -14,8 +14,9 @@ import SceneInfoDialog from "./scene-info-dialog"
 import { ErrorBoundary } from "react-error-boundary"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Heart } from "lucide-react"
+import { Globe, Heart } from "lucide-react"
 import { cn } from "@/lib/utils"
+import Link from "next/link"
 
 interface ActionsProps {
   pathname: string
@@ -28,7 +29,7 @@ const Actions = ({ pathname }: ActionsProps) => {
   const updateScene = useMutation(api.scenes.updateScene)
 
   const isView = pathname.includes("/view/")
-  const isNew = pathname.includes("/new")
+  const isMyScenes = pathname.includes("/my-scenes")
 
   const sceneId = isView ? (pathname.split("/")[2] as Id<"scenes">) : undefined
 
@@ -75,7 +76,16 @@ const Actions = ({ pathname }: ActionsProps) => {
     user?.id && sceneId ? { userId: user.id, sceneId: sceneId } : "skip"
   )
 
-  if (!isView && isNew) return null
+  if (isMyScenes)
+    return (
+      <Link href={`/user/${user?.username}`}>
+        <Button size="sm">
+          <Globe /> Public Profile
+        </Button>
+      </Link>
+    )
+
+  if (!isView) return null
 
   return (
     <div className="flex items-center gap-2">

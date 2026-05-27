@@ -9,25 +9,35 @@ export type SceneCardScene = Omit<Doc<"scenes">, "ownerId"> & {
 
 export function SceneCard({ scene }: { scene: SceneCardScene }) {
   return (
-    <Link
-      href={`/view/${scene._id}`}
-      className="block overflow-hidden rounded-lg border bg-muted/40 transition-colors outline-none hover:border-primary focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-    >
-      <div className="relative flex aspect-video items-center justify-center bg-muted">
+    <div className="block overflow-hidden rounded-lg border bg-muted/40 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50">
+      <Link
+        href={`/view/${scene._id}`}
+        className="relative flex aspect-video items-center justify-center border border-transparent transition-colors hover:border-primary"
+      >
         <Box
           strokeWidth={1.25}
           className="size-14 text-muted-foreground"
           aria-hidden
         />
         <span className="sr-only">Scene preview placeholder</span>
-      </div>
+      </Link>
       <div className="flex flex-col gap-1 p-3">
         <div>
-          <span className="line-clamp-1 leading-snug font-semibold">
+          <Link
+            href={`/view/${scene._id}`}
+            className="line-clamp-1 leading-snug font-semibold hover:underline"
+          >
             {scene.name}
-          </span>
+          </Link>
           <span className="line-clamp-1 text-xs leading-snug font-semibold text-muted-foreground">
-            by <span className="text-foreground">{scene.username}</span>
+            by{" "}
+            <Link
+              href={`/user/${scene.username}`}
+              target="_blank"
+              className="text-foreground hover:underline"
+            >
+              {scene.username}
+            </Link>
           </span>
         </div>
         <div className="flex items-center justify-between">
@@ -44,6 +54,6 @@ export function SceneCard({ scene }: { scene: SceneCardScene }) {
           </span>
         </div>
       </div>
-    </Link>
+    </div>
   )
 }
