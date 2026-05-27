@@ -1,4 +1,4 @@
-import ErrorPageComponent from "@/layout/error/error-page-component"
+import ErrorPageComponent from "@/components/layout/error/error-page-component"
 
 const Page = () => {
   return <ErrorPageComponent />

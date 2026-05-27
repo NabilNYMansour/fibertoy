@@ -27,7 +27,14 @@ export default defineSchema({
     .index("by_public_and_updatedAt", ["public", "updatedAt"])
     .index("by_public_and_createdAt", ["public", "createdAt"])
     .index("by_public_and_views", ["public", "views"])
-    .index("by_public_and_likes", ["public", "likes"]),
+    .index("by_public_and_likes", ["public", "likes"])
+    // Global ranking: likes → views → updatedAt (desc via .order("desc")).
+    .index("by_public_and_likes_views_and_updatedAt", [
+      "public",
+      "likes",
+      "views",
+      "updatedAt",
+    ]),
   codes: defineTable({
     sceneId: v.id("scenes"),
     code: v.string(),

@@ -173,6 +173,59 @@ export const listBrowseScenesPaginated = query({
   },
 })
 
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000
+const HOMEPAGE_RANK_COUNT = 5
+const HOMEPAGE_WEEK_POOL_CAP = 3000
+
+function compareScenesForHomeRanking<
+  T extends {
+    likes: number
+    views: number
+    updatedAt: number
+  },
+>(a: T, b: T) {
+  if (b.likes !== a.likes) return b.likes - a.likes
+  if (b.views !== a.views) return b.views - a.views
+  return b.updatedAt - a.updatedAt
+}
+
+export const homeRankedPublicScenes = query({
+  args: {},
+  handler: async (ctx) => {
+    const weekAgo = Date.now() - WEEK_MS
+
+    const weekPool = await ctx.db
+      .query("scenes")
+      .withIndex("by_public_and_createdAt", (q) =>
+        q.eq("public", true).gte("createdAt", weekAgo)
+      )
+      .take(HOMEPAGE_WEEK_POOL_CAP)
+
+    if (weekPool.length < HOMEPAGE_RANK_COUNT) {
+      const ranked = await ctx.db
+        .query("scenes")
+        .withIndex("by_public_and_likes_views_and_updatedAt", (q) =>
+          q.eq("public", true)
+        )
+        .order("desc")
+        .take(HOMEPAGE_RANK_COUNT)
+      return {
+        rankingSource: "allTime" as const,
+        ranked: ranked.map((s) => ({ ...s, ownerId: undefined })),
+      }
+    }
+
+    const top = [...weekPool]
+      .sort(compareScenesForHomeRanking)
+      .slice(0, HOMEPAGE_RANK_COUNT)
+
+    return {
+      rankingSource: "lastWeek" as const,
+      ranked: top.map((s) => ({ ...s, ownerId: undefined })),
+    }
+  },
+})
+
 export const deleteScene = mutation({
   args: {
     sceneId: v.id("scenes"),

@@ -1,4 +1,4 @@
-import ErrorRedirect from "@/layout/error/error-redirect"
+import ErrorRedirect from "@/components/layout/error/error-redirect"
 
 import { ScenesTable } from "./_components/scenes-table"
 

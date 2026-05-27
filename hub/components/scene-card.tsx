@@ -3,9 +3,9 @@ import { formatSceneDateTime } from "@/lib/format-scene-datetime"
 import { Box, Eye, Heart } from "lucide-react"
 import Link from "next/link"
 
-export type SceneCardProps = Omit<Doc<"scenes">, "ownerId">
+export type SceneCardScene = Omit<Doc<"scenes">, "ownerId">
 
-export function SceneCard({ scene }: { scene: SceneCardProps }) {
+export function SceneCard({ scene }: { scene: SceneCardScene }) {
   return (
     <Link
       href={`/view/${scene._id}`}
