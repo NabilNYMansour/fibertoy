@@ -6,14 +6,18 @@ import { Separator } from "@/components/ui/separator"
 import { Plus } from "lucide-react"
 import HeaderActions from "./header-actions"
 import ClerkUserButton from "@/components/auth/clerk-user-button"
+import SearchBar from "./search-bar"
 
 const MainHeader = () => {
   return (
     <header className="flex flex-col justify-between gap-2 border-b px-2 py-1 md:flex-row md:items-center">
       {/*==========={Title}===========*/}
-      <Link href="/" className="text-2xl font-semibold">
-        FiberToy
-      </Link>
+      <div className="flex items-center gap-2">
+        <Link href="/" className="text-2xl font-semibold">
+          FiberToy
+        </Link>
+        <SearchBar />
+      </div>
       <div className="flex justify-end gap-2">
         {/*==========={Sign in/up and Clerk button}===========*/}
         <div className="flex items-center gap-2">

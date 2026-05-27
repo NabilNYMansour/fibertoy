@@ -14,10 +14,14 @@ import {
   type SortDirection,
 } from "./browse-utils"
 import { SceneCard } from "@/components/scene-card"
+import { useSearchParams } from "next/navigation"
 
 const PAGE_SIZE = 8
 
 export function BrowseScenes() {
+  const searchParams = useSearchParams()
+  const search = searchParams.get("q") ?? ""
+
   const [sortBy, setSortBy] = useState<BrowseSortColumn>("updatedAt")
   const [sortDirection, setSortDirection] = useState<SortDirection>(
     defaultBrowseSortDirection("updatedAt")
@@ -30,7 +34,7 @@ export function BrowseScenes() {
     isLoading,
   } = usePaginatedQuery(
     api.scenes.listBrowseScenesPaginated,
-    { sortBy, sortDirection },
+    { sortBy, sortDirection, search },
     { initialNumItems: PAGE_SIZE }
   )
 
@@ -76,6 +80,7 @@ export function BrowseScenes() {
         sortBy={sortBy}
         sortDirection={sortDirection}
         onSort={onSortColumn}
+        disabled={!!search}
       />
 
       <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

@@ -17,10 +17,12 @@ export function BrowseSortToggle({
   sortBy,
   sortDirection,
   onSort,
+  disabled,
 }: {
   sortBy: BrowseSortColumn
   sortDirection: SortDirection
   onSort: (column: BrowseSortColumn) => void
+  disabled: boolean
 }) {
   return (
     <div className="flex flex-wrap gap-2" role="group" aria-label="Sort scenes">
@@ -36,6 +38,7 @@ export function BrowseSortToggle({
             aria-pressed={active}
             className={cn("gap-1.5")}
             onClick={() => onSort(column)}
+            disabled={disabled}
           >
             <span>{label}</span>
             {active ? (

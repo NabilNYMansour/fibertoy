@@ -23,6 +23,10 @@ export default defineSchema({
 
     public: v.boolean(),
   })
+    .searchIndex("search_name", {
+      searchField: "name",
+      filterFields: ["public"],
+    })
     .index("by_ownerId_and_name", ["ownerId", "name"])
     .index("by_ownerId_and_updatedAt", ["ownerId", "updatedAt"])
     .index("by_ownerId_and_createdAt", ["ownerId", "createdAt"])

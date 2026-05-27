@@ -166,11 +166,27 @@ export const listMyScenesPaginated = query({
 export const listBrowseScenesPaginated = query({
   args: {
     sortBy: browseSortByValidator,
+    search: v.optional(v.string()),
     sortDirection: v.union(v.literal("asc"), v.literal("desc")),
     paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
-    const { sortBy, sortDirection, paginationOpts } = args
+    const { sortBy, search, sortDirection, paginationOpts } = args
+
+    if (search) {
+      const page = await ctx.db
+        .query("scenes")
+        .withSearchIndex("search_name", (q) =>
+          q.search("name", search).eq("public", true)
+        )
+        .paginate(paginationOpts)
+
+      return {
+        ...page,
+        page: page.page.map((scene) => ({ ...scene, ownerId: undefined })),
+      }
+    }
+
     const indexName = INDEX_BROWSE_SCENES_SORT[sortBy]
     const page = await ctx.db
       .query("scenes")

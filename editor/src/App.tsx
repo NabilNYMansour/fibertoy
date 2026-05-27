@@ -61,19 +61,23 @@ export function App() {
       {initialized && (
         <>
           <LiveProvider noInline code={code} scope={SCOPE}>
-            <div className={cn(noCodeView ? "w-0" : "w-1/2")}>
-              <CodeEditor
-                value={code}
-                onSave={userExists ? handleCodeChange : undefined}
-                onCompile={handleCompile}
-                fork={fork}
-              />
-            </div>
-            <div className={cn(noCodeView ? "w-full" : "w-1/2")}>
-              <LivePreviewWrapper
-                setNoCodeView={setNoCodeView}
-                noCodeView={noCodeView}
-              />
+            <div className="flex h-full w-full flex-col sm:flex-row">
+              <div
+                className={cn("h-full", noCodeView ? "h-0 w-0" : "sm:w-1/2")}
+              >
+                <CodeEditor
+                  value={code}
+                  onSave={userExists ? handleCodeChange : undefined}
+                  onCompile={handleCompile}
+                  fork={fork}
+                />
+              </div>
+              <div className={cn("h-full", noCodeView ? "w-full" : "sm:w-1/2")}>
+                <LivePreviewWrapper
+                  setNoCodeView={setNoCodeView}
+                  noCodeView={noCodeView}
+                />
+              </div>
             </div>
           </LiveProvider>
         </>
