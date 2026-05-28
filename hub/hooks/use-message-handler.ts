@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { api } from "@/convex/_generated/api"
 import { useMutation } from "convex/react"
 import { useRouter } from "next/navigation"
@@ -8,6 +8,8 @@ import { toast } from "sonner"
 import { Id } from "@/convex/_generated/dataModel"
 import { useUser } from "@clerk/nextjs"
 import { submitSceneScreenshot } from "@/lib/submit-scene-screenshot"
+
+const THUMBNAIL_SAVE_INTERVAL = 1000
 
 interface UseMessageHandlerProps {
   sceneId?: Id<"scenes">
@@ -23,6 +25,7 @@ const useMessageHandler = ({
   fork,
 }: UseMessageHandlerProps) => {
   const [ready, setReady] = useState(false)
+  const lastThumbnailSaveAt = useRef(0)
 
   const router = useRouter()
   const updateScene = useMutation(api.scenes.updateScene)
@@ -74,6 +77,9 @@ const useMessageHandler = ({
           return
         }
         if (!event.data.dataUrl || !user?.id || !sceneId) return
+        const now = Date.now()
+        if (now - lastThumbnailSaveAt.current < THUMBNAIL_SAVE_INTERVAL) return
+        lastThumbnailSaveAt.current = now
         submitSceneScreenshot({
           sceneId,
           ownerId: user.id,
