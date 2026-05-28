@@ -1,24 +1,35 @@
 import type { Doc } from "@/convex/_generated/dataModel"
 import { formatSceneDateTime } from "@/lib/format-scene-datetime"
 import { Box, Eye, Heart } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 
 export type SceneCardScene = Omit<Doc<"scenes">, "ownerId"> & {
   username: string
+  thumbnailUrl?: string
 }
 
 export function SceneCard({ scene }: { scene: SceneCardScene }) {
   return (
-    <div className="block overflow-hidden rounded-lg border bg-muted/40 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50">
+    <div className="block max-w-lg overflow-hidden rounded-lg border bg-muted/40 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50">
       <Link
         href={`/view/${scene._id}`}
         className="relative flex aspect-video items-center justify-center border border-transparent transition-colors hover:border-primary"
       >
-        <Box
-          strokeWidth={1.25}
-          className="size-14 text-muted-foreground"
-          aria-hidden
-        />
+        {scene.thumbnailUrl ? (
+          <Image
+            src={scene.thumbnailUrl}
+            alt="Scene preview"
+            width={512}
+            height={288}
+          />
+        ) : (
+          <Box
+            strokeWidth={1.25}
+            className="size-14 text-muted-foreground"
+            aria-hidden
+          />
+        )}
         <span className="sr-only">Scene preview placeholder</span>
       </Link>
       <div className="flex flex-col gap-1 p-3">

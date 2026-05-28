@@ -52,7 +52,7 @@ export function HomeScenes() {
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-8 md:py-12">
       <section className="flex flex-col-reverse gap-10 xl:flex-row xl:gap-14">
-        <div className="max-w-2xl min-w-0 flex-1 space-y-3">
+        <div className="max-w-2xl min-w-0 space-y-3">
           <p className="text-sm font-medium tracking-[0.2em] text-muted-foreground uppercase">
             Scene of the week
           </p>

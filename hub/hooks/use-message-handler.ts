@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { Id } from "@/convex/_generated/dataModel"
 import { useUser } from "@clerk/nextjs"
+import { submitSceneScreenshot } from "@/lib/submit-scene-screenshot"
 
 interface UseMessageHandlerProps {
   sceneId?: Id<"scenes">
@@ -25,6 +26,8 @@ const useMessageHandler = ({
 
   const router = useRouter()
   const updateScene = useMutation(api.scenes.updateScene)
+  const generateUploadUrl = useMutation(api.scenes.generateThumbnailUploadUrl)
+  const updateSceneThumbnail = useMutation(api.scenes.updateSceneThumbnail)
   const { user } = useUser()
 
   const handleSave = useCallback(
@@ -39,7 +42,12 @@ const useMessageHandler = ({
           data: { code },
         })
         toast.success("Saved!", { id: toastId })
-        if (sceneId !== newSceneId) router.push(`/view/${newSceneId}`)
+        if (sceneId !== newSceneId) {
+          router.push(`/view/${newSceneId}`)
+        } else {
+          const win = iframeRef.current?.contentWindow
+          win?.postMessage({ type: "screenshot" }, "*")
+        }
       } catch (error) {
         const rawErrorMessage =
           error instanceof Error ? error.message : String(error)
@@ -51,7 +59,7 @@ const useMessageHandler = ({
         toast.error(errorMessage, { id: toastId })
       }
     },
-    [sceneId, user, updateScene, router]
+    [sceneId, user, updateScene, router, iframeRef]
   )
 
   useEffect(() => {
@@ -60,25 +68,37 @@ const useMessageHandler = ({
         handleSave(event.data.code)
       } else if (event.data.type === "ready") {
         setReady(true)
+      } else if (event.data.type === "screenshot") {
+        if (event.data.error) {
+          toast.error(event.data.error)
+          return
+        }
+        if (!event.data.dataUrl || !user?.id || !sceneId) return
+        submitSceneScreenshot({
+          sceneId,
+          ownerId: user.id,
+          dataUrl: event.data.dataUrl,
+          generateUploadUrl,
+          updateSceneThumbnail,
+        })
       }
     }
     window.addEventListener("message", handleMessage)
     return () => {
       window.removeEventListener("message", handleMessage)
     }
-  }, [handleSave])
+  }, [handleSave, sceneId, generateUploadUrl, updateSceneThumbnail, user])
 
   useEffect(() => {
     if (!iframeRef.current || !ready || code === undefined || code === null) {
       return
     }
     const win = iframeRef.current.contentWindow
-    if (!win) return
-    win.postMessage(
+    win?.postMessage(
       { type: "initialize", code, userExists: !!user?.id, fork },
       "*"
     )
-    win.postMessage({ type: "code", code }, "*")
+    win?.postMessage({ type: "code", code }, "*")
   }, [code, ready, iframeRef, user, fork])
 }
 

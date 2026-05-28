@@ -15,6 +15,8 @@ export default defineSchema({
     name: v.string(),
     description: v.optional(v.string()),
 
+    thumbnailStorageId: v.optional(v.id("_storage")),
+
     views: v.number(),
     likes: v.number(),
 

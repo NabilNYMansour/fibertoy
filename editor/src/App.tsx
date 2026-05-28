@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { LiveProvider, LivePreview, LiveContext } from "react-live"
 import CodeEditor from "./components/code-editor"
 import * as THREE from "three"
@@ -23,6 +23,7 @@ export function App() {
   const [userExists, setUserExists] = useState(false)
   const [code, setCode] = useState("")
   const [noCodeView, setNoCodeView] = useState(false)
+  const previewRef = useRef<HTMLDivElement>(null)
 
   const handleCodeChange = (newCode: string) => {
     setCode(newCode)
@@ -42,6 +43,29 @@ export function App() {
         setCode(event.data.code)
         setUserExists(event.data.userExists)
         setFork(event.data.fork)
+      } else if (event.data.type === "screenshot") {
+        requestAnimationFrame(() => {
+          const canvas = previewRef.current?.querySelector("canvas")
+          if (!(canvas instanceof HTMLCanvasElement)) {
+            window.parent.postMessage(
+              { type: "screenshot", error: "No canvas found" },
+              "*"
+            )
+            return
+          }
+          try {
+            const dataUrl = canvas.toDataURL("image/png")
+            window.parent.postMessage({ type: "screenshot", dataUrl }, "*")
+          } catch (error) {
+            window.parent.postMessage(
+              {
+                type: "screenshot",
+                error: error instanceof Error ? error.message : String(error),
+              },
+              "*"
+            )
+          }
+        })
       }
     }
     window.addEventListener("message", handleMessage)
@@ -74,6 +98,7 @@ export function App() {
               </div>
               <div className={cn("h-full", noCodeView ? "w-full" : "sm:w-1/2")}>
                 <LivePreviewWrapper
+                  previewRef={previewRef}
                   setNoCodeView={setNoCodeView}
                   noCodeView={noCodeView}
                 />
@@ -87,17 +112,19 @@ export function App() {
 }
 
 interface LivePreviewWrapperProps {
+  previewRef: React.RefObject<HTMLDivElement | null>
   setNoCodeView: React.Dispatch<React.SetStateAction<boolean>>
   noCodeView: boolean
 }
 
 function LivePreviewWrapper({
+  previewRef,
   setNoCodeView,
   noCodeView,
 }: LivePreviewWrapperProps) {
   const { error } = useContext(LiveContext)
   return (
-    <div className="relative flex h-full w-full">
+    <div ref={previewRef} className="relative flex h-full w-full">
       <LivePreview className="h-full w-full" />
       {error && (
         <div className="absolute top-0 left-0 z-10 flex h-full w-full items-center justify-center border-8 border-red-500 bg-black/50 p-2">

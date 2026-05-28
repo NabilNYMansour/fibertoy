@@ -1,6 +1,15 @@
 import { mutation, query } from "./_generated/server"
+import type { QueryCtx } from "./_generated/server"
+import type { Doc } from "./_generated/dataModel"
 import { paginationOptsValidator } from "convex/server"
 import { v } from "convex/values"
+
+async function sceneWithThumbnailUrl(ctx: QueryCtx, scene: Doc<"scenes">) {
+  const thumbnailUrl = scene.thumbnailStorageId
+    ? ((await ctx.storage.getUrl(scene.thumbnailStorageId)) ?? undefined)
+    : undefined
+  return { ...scene, thumbnailUrl }
+}
 
 export type UpdateSceneDataInput = {
   name?: string
@@ -155,11 +164,17 @@ export const listMyScenesPaginated = query({
   handler: async (ctx, args) => {
     const { ownerId, sortBy, sortDirection, paginationOpts } = args
     const indexName = INDEX_BY_SCENES_SORT[sortBy]
-    return await ctx.db
+    const result = await ctx.db
       .query("scenes")
       .withIndex(indexName, (q) => q.eq("ownerId", ownerId))
       .order(sortDirection)
       .paginate(paginationOpts)
+    return {
+      ...result,
+      page: await Promise.all(
+        result.page.map((scene) => sceneWithThumbnailUrl(ctx, scene))
+      ),
+    }
   },
 })
 
@@ -183,7 +198,12 @@ export const listBrowseScenesPaginated = query({
 
       return {
         ...page,
-        page: page.page.map((scene) => ({ ...scene, ownerId: undefined })),
+        page: await Promise.all(
+          page.page.map(async (scene) => {
+            const withThumbnail = await sceneWithThumbnailUrl(ctx, scene)
+            return { ...withThumbnail, ownerId: undefined }
+          })
+        ),
       }
     }
 
@@ -196,7 +216,12 @@ export const listBrowseScenesPaginated = query({
 
     return {
       ...page,
-      page: page.page.map((scene) => ({ ...scene, ownerId: undefined })),
+      page: await Promise.all(
+        page.page.map(async (scene) => {
+          const withThumbnail = await sceneWithThumbnailUrl(ctx, scene)
+          return { ...withThumbnail, ownerId: undefined }
+        })
+      ),
     }
   },
 })
@@ -239,7 +264,12 @@ export const homeRankedPublicScenes = query({
         .take(HOMEPAGE_RANK_COUNT)
       return {
         rankingSource: "allTime" as const,
-        ranked: ranked.map((s) => ({ ...s, ownerId: undefined })),
+        ranked: await Promise.all(
+          ranked.map(async (s) => {
+            const withThumbnail = await sceneWithThumbnailUrl(ctx, s)
+            return { ...withThumbnail, ownerId: undefined }
+          })
+        ),
       }
     }
 
@@ -249,7 +279,12 @@ export const homeRankedPublicScenes = query({
 
     return {
       rankingSource: "lastWeek" as const,
-      ranked: top.map((s) => ({ ...s, ownerId: undefined })),
+      ranked: await Promise.all(
+        top.map(async (s) => {
+          const withThumbnail = await sceneWithThumbnailUrl(ctx, s)
+          return { ...withThumbnail, ownerId: undefined }
+        })
+      ),
     }
   },
 })
@@ -279,6 +314,9 @@ export const deleteScene = mutation({
     for (const code of codes) {
       await ctx.db.delete(code._id)
     }
+    if (scene.thumbnailStorageId) {
+      await ctx.storage.delete(scene.thumbnailStorageId)
+    }
     await ctx.db.delete(sceneId)
     return sceneId
   },
@@ -294,19 +332,20 @@ export const getScene = query({
     const scene = await ctx.db.get("scenes", sceneId)
     const isPublic = scene?.public ?? false
     const requesterIsOwner = scene?.ownerId === ownerId
-    if (isPublic && !requesterIsOwner) {
-      const cleanData = {
-        ...scene,
+    if (scene && isPublic && !requesterIsOwner) {
+      const withThumbnail = await sceneWithThumbnailUrl(ctx, scene)
+      return {
+        ...withThumbnail,
         ownerId: undefined,
         readOnly: true,
       }
-      return cleanData
     }
     if (!scene || (!isPublic && !requesterIsOwner)) {
       throw new Error("Scene not found")
     }
+    const withThumbnail = await sceneWithThumbnailUrl(ctx, scene)
     return {
-      ...scene,
+      ...withThumbnail,
       ownerId: undefined,
       readOnly: false,
     }
@@ -331,7 +370,9 @@ export const getUserPublicScenes = query({
         q.eq("ownerId", clerkId).eq("public", true)
       )
       .collect()
-    return scenes
+    return await Promise.all(
+      scenes.map((scene) => sceneWithThumbnailUrl(ctx, scene))
+    )
   },
 })
 
@@ -401,5 +442,36 @@ export const getUserLikedScene = query({
       )
       .unique()
     return !!existingLike
+  },
+})
+
+export const generateThumbnailUploadUrl = mutation({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.storage.generateUploadUrl()
+  },
+})
+
+export const updateSceneThumbnail = mutation({
+  args: {
+    sceneId: v.id("scenes"),
+    ownerId: v.string(),
+    storageId: v.id("_storage"),
+  },
+  handler: async (ctx, args) => {
+    const { sceneId, ownerId, storageId } = args
+    const scene = await ctx.db.get(sceneId)
+    if (!scene || scene.ownerId !== ownerId) {
+      throw new Error("Scene not found")
+    }
+    const previousStorageId = scene.thumbnailStorageId
+    await ctx.db.patch(sceneId, {
+      thumbnailStorageId: storageId,
+      updatedAt: Date.now(),
+    })
+    if (previousStorageId) {
+      await ctx.storage.delete(previousStorageId)
+    }
+    return storageId
   },
 })
