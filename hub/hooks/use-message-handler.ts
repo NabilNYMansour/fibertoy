@@ -40,7 +40,6 @@ const useMessageHandler = ({
       try {
         const newSceneId = await updateScene({
           sceneId,
-          ownerId: user.id,
           username: user.username,
           data: { code },
         })
@@ -82,7 +81,6 @@ const useMessageHandler = ({
         lastThumbnailSaveAt.current = now
         submitSceneScreenshot({
           sceneId,
-          ownerId: user.id,
           dataUrl: event.data.dataUrl,
           generateUploadUrl,
           updateSceneThumbnail,

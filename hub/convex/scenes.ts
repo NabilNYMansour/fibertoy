@@ -27,7 +27,6 @@ export const MAX_NAME_LENGTH = 100
 export const updateScene = mutation({
   args: {
     sceneId: v.optional(v.id("scenes")),
-    ownerId: v.string(),
     username: v.string(),
     data: v.object({
       name: v.optional(v.string()),
@@ -37,7 +36,9 @@ export const updateScene = mutation({
     }),
   },
   handler: async (ctx, args) => {
-    const { sceneId, ownerId, username, data } = args
+    const { sceneId, username, data } = args
+    const ownerId = (await ctx.auth.getUserIdentity())?.subject
+    if (!ownerId) throw new Error("Unauthorized")
     //---------------- Code length check ----------------//
     if ((data.code?.length ?? 0) > MAX_CODE_LENGTH) {
       throw new Error("Code too long")
@@ -156,13 +157,14 @@ const browseSortByValidator = v.union(
 
 export const listMyScenesPaginated = query({
   args: {
-    ownerId: v.string(),
     sortBy: sortByValidator,
     sortDirection: v.union(v.literal("asc"), v.literal("desc")),
     paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
-    const { ownerId, sortBy, sortDirection, paginationOpts } = args
+    const { sortBy, sortDirection, paginationOpts } = args
+    const ownerId = (await ctx.auth.getUserIdentity())?.subject
+    if (!ownerId) throw new Error("Not authenticated")
     const indexName = INDEX_BY_SCENES_SORT[sortBy]
     const result = await ctx.db
       .query("scenes")
@@ -292,10 +294,11 @@ export const homeRankedPublicScenes = query({
 export const deleteScene = mutation({
   args: {
     sceneId: v.id("scenes"),
-    ownerId: v.string(),
   },
   handler: async (ctx, args) => {
-    const { sceneId, ownerId } = args
+    const { sceneId } = args
+    const ownerId = (await ctx.auth.getUserIdentity())?.subject
+    if (!ownerId) throw new Error("Not authenticated")
     const scene = await ctx.db.get(sceneId)
     if (!scene || scene.ownerId !== ownerId) {
       throw new Error("Scene not found")
@@ -325,10 +328,10 @@ export const deleteScene = mutation({
 export const getScene = query({
   args: {
     sceneId: v.id("scenes"),
-    ownerId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const { sceneId, ownerId } = args
+    const { sceneId } = args
+    const ownerId = (await ctx.auth.getUserIdentity())?.subject
     const scene = await ctx.db.get("scenes", sceneId)
     const isPublic = scene?.public ?? false
     const requesterIsOwner = scene?.ownerId === ownerId
@@ -455,11 +458,12 @@ export const generateThumbnailUploadUrl = mutation({
 export const updateSceneThumbnail = mutation({
   args: {
     sceneId: v.id("scenes"),
-    ownerId: v.string(),
     storageId: v.id("_storage"),
   },
   handler: async (ctx, args) => {
-    const { sceneId, ownerId, storageId } = args
+    const { sceneId, storageId } = args
+    const ownerId = (await ctx.auth.getUserIdentity())?.subject
+    if (!ownerId) throw new Error("Not authenticated")
     const scene = await ctx.db.get(sceneId)
     if (!scene || scene.ownerId !== ownerId) {
       throw new Error("Scene not found")

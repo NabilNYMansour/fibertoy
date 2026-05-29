@@ -47,7 +47,7 @@ export function ScenesTable() {
     isLoading,
   } = usePaginatedQuery(
     api.scenes.listMyScenesPaginated,
-    user?.id ? { ownerId: user.id, sortBy, sortDirection } : "skip",
+    user?.id ? { sortBy, sortDirection } : "skip",
     { initialNumItems: PAGE_SIZE }
   )
 
@@ -57,7 +57,7 @@ export function ScenesTable() {
     if (!user?.id) return
     const toastId = toast.loading("Deleting scene...")
     try {
-      await deleteScene({ sceneId, ownerId: user.id })
+      await deleteScene({ sceneId })
       toast.success("Scene deleted", { id: toastId })
     } catch {
       toast.error("Failed to delete scene", { id: toastId })

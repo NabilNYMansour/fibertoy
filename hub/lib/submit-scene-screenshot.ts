@@ -11,13 +11,11 @@ export async function dataUrlToBlob(dataUrl: string): Promise<Blob> {
 
 export async function submitSceneScreenshot({
   sceneId,
-  ownerId,
   dataUrl,
   generateUploadUrl,
   updateSceneThumbnail,
 }: {
   sceneId: Id<"scenes">
-  ownerId: string
   dataUrl: string
   generateUploadUrl: ReturnType<
     typeof useMutation<typeof api.scenes.generateThumbnailUploadUrl>
@@ -38,7 +36,7 @@ export async function submitSceneScreenshot({
     throw new Error("Thumbnail upload failed")
   }
   const { storageId } = (await response.json()) as { storageId: Id<"_storage"> }
-  await updateSceneThumbnail({ sceneId, ownerId, storageId })
+  await updateSceneThumbnail({ sceneId, storageId })
 }
 
 type ImageType = "image/jpeg" | "image/png" | "image/webp"

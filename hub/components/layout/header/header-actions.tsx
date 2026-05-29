@@ -35,7 +35,7 @@ const Actions = ({ pathname }: ActionsProps) => {
 
   const sceneData = useQuery(
     api.scenes.getScene,
-    sceneId ? { sceneId, ownerId: user?.id } : "skip"
+    sceneId ? { sceneId } : "skip"
   )
 
   const handleSubmit = async (sceneData: UpdateSceneDataInput) => {
@@ -44,7 +44,6 @@ const Actions = ({ pathname }: ActionsProps) => {
     try {
       await updateScene({
         sceneId,
-        ownerId: user.id,
         data: sceneData,
         username: user.username,
       })
