@@ -18,7 +18,7 @@ export function SceneRowActions({
   scene,
   onDelete,
 }: {
-  scene: Doc<"scenes">
+  scene: Omit<Doc<"scenes">, "ownerId">
   onDelete: (sceneId: Id<"scenes">) => void | Promise<void>
 }) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
