@@ -87,7 +87,10 @@ export function HomeScenes() {
               </Button>
             </Link>
             <Link href="https://buymeacoffee.com/nabilmansour" target="_blank">
-              <Button size="lg" variant="destructive" className="w-40">
+              <Button
+                size="lg"
+                className="w-40 bg-red-400! text-white hover:bg-red-500!"
+              >
                 <Heart className="mr-1" />
                 Support
               </Button>
