@@ -93,7 +93,10 @@ export function App() {
           <LiveProvider noInline code={code} scope={SCOPE}>
             <div className="flex h-full w-full flex-col sm:flex-row">
               <div
-                className={cn("h-full", noCodeView ? "h-0 w-0" : "sm:w-1/2")}
+                className={cn(
+                  "h-full",
+                  noCodeView ? "h-0 w-0" : "border-b sm:w-1/2 sm:border-r"
+                )}
               >
                 <CodeEditor
                   value={code}
