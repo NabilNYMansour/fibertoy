@@ -371,7 +371,7 @@ export const getUserPublicScenes = query({
       )
       .collect()
     return await Promise.all(
-      scenes.map((scene) => sceneWithThumbnailUrl(ctx, scene))
+      scenes.map((scene) => sceneWithThumbnailUrl(ctx, scene)).reverse()
     )
   },
 })
