@@ -5,7 +5,13 @@ import * as THREE from "three"
 import * as R3F from "@react-three/fiber"
 import * as DREI from "@react-three/drei"
 import * as ZUSTAND from "zustand"
-import { ArrowLeftToLine, ArrowRightFromLine, Loader2 } from "lucide-react"
+import {
+  ArrowDownToLine,
+  ArrowLeftToLine,
+  ArrowRightFromLine,
+  ArrowUpFromLine,
+  Loader2,
+} from "lucide-react"
 import { cn } from "./lib/utils"
 import { Button } from "./components/ui/button"
 
@@ -141,7 +147,12 @@ function LivePreviewWrapper({
         onClick={() => setNoCodeView(!noCodeView)}
         title={noCodeView ? "Show code" : "Hide code"}
       >
-        {noCodeView ? <ArrowRightFromLine /> : <ArrowLeftToLine />}
+        <div className="hidden md:block">
+          {noCodeView ? <ArrowRightFromLine /> : <ArrowLeftToLine />}
+        </div>
+        <div className="block md:hidden">
+          {noCodeView ? <ArrowDownToLine /> : <ArrowUpFromLine />}
+        </div>
       </Button>
     </div>
   )
