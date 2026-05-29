@@ -174,7 +174,10 @@ export const listMyScenesPaginated = query({
     return {
       ...result,
       page: await Promise.all(
-        result.page.map((scene) => sceneWithThumbnailUrl(ctx, scene))
+        result.page.map(async (scene) => {
+          const withThumbnail = await sceneWithThumbnailUrl(ctx, scene)
+          return { ...withThumbnail, ownerId: undefined }
+        })
       ),
     }
   },
@@ -373,9 +376,14 @@ export const getUserPublicScenes = query({
         q.eq("ownerId", clerkId).eq("public", true)
       )
       .collect()
-    return await Promise.all(
-      scenes.map((scene) => sceneWithThumbnailUrl(ctx, scene)).reverse()
-    )
+    return (
+      await Promise.all(
+        scenes.map(async (scene) => {
+          const withThumbnail = await sceneWithThumbnailUrl(ctx, scene)
+          return { ...withThumbnail, ownerId: undefined }
+        })
+      )
+    ).reverse()
   },
 })
 
