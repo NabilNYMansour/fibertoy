@@ -11,6 +11,7 @@ import { UpdateSceneDataInput } from "@/convex/scenes"
 import PublicEye from "@/components/ui/public-eye"
 import { Separator } from "@/components/ui/separator"
 import SceneInfoDialog from "./scene-info-dialog"
+import ShareDialog from "./share-dialog"
 import { ErrorBoundary } from "react-error-boundary"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -114,6 +115,9 @@ const Actions = ({ pathname }: ActionsProps) => {
           </div>
           <SceneInfoDialog sceneData={sceneData} />
         </>
+      )}
+      {sceneData && (
+        <ShareDialog sceneId={sceneId!} isPublic={sceneData.public} />
       )}
       <Separator orientation="vertical" />
     </div>

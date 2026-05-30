@@ -81,6 +81,10 @@ export function App() {
     }
   }, [])
 
+  // get url params and see if embed=true
+  const embed =
+    new URLSearchParams(window.location.search).get("embed") === "true"
+
   return (
     <div className="flex h-svh">
       {!initialized && (
@@ -89,8 +93,10 @@ export function App() {
         </div>
       )}
       {initialized && (
-        <>
-          <LiveProvider noInline code={code} scope={SCOPE}>
+        <LiveProvider noInline code={code} scope={SCOPE}>
+          {embed ? (
+            <LivePreview className="h-full w-full" />
+          ) : (
             <div className="flex h-full w-full flex-col sm:flex-row">
               <div
                 className={cn(
@@ -113,8 +119,8 @@ export function App() {
                 />
               </div>
             </div>
-          </LiveProvider>
-        </>
+          )}
+        </LiveProvider>
       )}
     </div>
   )
