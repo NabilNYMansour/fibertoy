@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useRef } from "react"
+import { Suspense, useEffect, useMemo, useRef } from "react"
 import { useMutation, useQuery_experimental as useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { usePathname, notFound, useSearchParams } from "next/navigation"
@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils"
 import { useUser } from "@clerk/nextjs"
 import BasicLoader from "@/components/loaders/basic-loader"
 
-export default function Page() {
+function PageMain() {
   const iframeRef = useRef<HTMLIFrameElement>(null)
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -58,5 +58,13 @@ export default function Page() {
         sandbox="allow-scripts"
       />
     </div>
+  )
+}
+
+export default function Page() {
+  return (
+    <Suspense>
+      <PageMain />
+    </Suspense>
   )
 }

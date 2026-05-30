@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { api } from "@/convex/_generated/api"
 import { usePaginatedQuery } from "convex/react"
 import Link from "next/link"
-import { useCallback, useState } from "react"
+import { Suspense, useCallback, useState } from "react"
 import { BrowseSortToggle } from "./browse-sort-toggle"
 import {
   type BrowseSortColumn,
@@ -18,7 +18,7 @@ import { useSearchParams } from "next/navigation"
 
 const PAGE_SIZE = 8
 
-export function BrowseScenes() {
+function BrowseScenesMain() {
   const searchParams = useSearchParams()
   const search = searchParams.get("q") ?? ""
 
@@ -99,5 +99,13 @@ export function BrowseScenes() {
         onLoadMore={() => loadMore(PAGE_SIZE)}
       />
     </div>
+  )
+}
+
+export function BrowseScenes() {
+  return (
+    <Suspense>
+      <BrowseScenesMain />
+    </Suspense>
   )
 }

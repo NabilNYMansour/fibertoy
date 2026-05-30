@@ -5,9 +5,9 @@ import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useState } from "react"
+import { Suspense, useState } from "react"
 
-const SearchBar = () => {
+const SearchBarMain = () => {
   const searchParams = useSearchParams()
   const router = useRouter()
   const currentSearch = searchParams.get("q") ?? ""
@@ -43,4 +43,10 @@ const SearchBar = () => {
   )
 }
 
-export default SearchBar
+export default function SearchBar() {
+  return (
+    <Suspense>
+      <SearchBarMain />
+    </Suspense>
+  )
+}
