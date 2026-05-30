@@ -11,7 +11,7 @@ export type SceneCardScene = Omit<Doc<"scenes">, "ownerId"> & {
 
 export function SceneCard({ scene }: { scene: SceneCardScene }) {
   return (
-    <div className="block max-w-lg overflow-hidden rounded-lg border bg-muted/40 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50">
+    <div className="block max-w-lg overflow-hidden rounded-lg border border-muted-foreground/20 bg-muted/40 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50">
       <Link
         href={`/view/${scene._id}`}
         className="relative flex aspect-video items-center justify-center border border-transparent transition-colors hover:border-primary"
