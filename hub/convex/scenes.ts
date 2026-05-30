@@ -398,19 +398,24 @@ export const incrementSceneViews = mutation({
       throw new Error("Scene not found")
     }
 
-    await ctx.db.patch(sceneId, {
-      views: scene.views + 1,
-    })
+    if (scene.public) {
+      await ctx.db.patch(sceneId, {
+        views: scene.views + 1,
+      })
+    }
   },
 })
 
 export const toggleLikeScene = mutation({
-  args: {
-    userId: v.string(),
-    sceneId: v.id("scenes"),
-  },
+  args: { sceneId: v.id("scenes") },
   handler: async (ctx, args) => {
-    const { userId, sceneId } = args
+    const { sceneId } = args
+    const userId = (await ctx.auth.getUserIdentity())?.subject
+
+    if (!userId) {
+      return false
+    }
+
     const scene = await ctx.db.get(sceneId)
     if (!scene) {
       throw new Error("Scene not found")
@@ -440,12 +445,11 @@ export const toggleLikeScene = mutation({
 })
 
 export const getUserLikedScene = query({
-  args: {
-    userId: v.string(),
-    sceneId: v.id("scenes"),
-  },
+  args: { sceneId: v.id("scenes") },
   handler: async (ctx, args) => {
-    const { userId, sceneId } = args
+    const { sceneId } = args
+    const userId = (await ctx.auth.getUserIdentity())?.subject
+    if (!userId) return false
     const existingLike = await ctx.db
       .query("userSceneLikes")
       .withIndex("by_userId_and_sceneId", (q) =>
@@ -459,6 +463,9 @@ export const getUserLikedScene = query({
 export const generateThumbnailUploadUrl = mutation({
   args: {},
   handler: async (ctx) => {
+    if (!(await ctx.auth.getUserIdentity())) {
+      throw new Error("Not authenticated")
+    }
     return await ctx.storage.generateUploadUrl()
   },
 })

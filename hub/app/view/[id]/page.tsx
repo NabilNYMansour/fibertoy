@@ -7,11 +7,14 @@ import { usePathname, notFound, useSearchParams } from "next/navigation"
 import { Id } from "@/convex/_generated/dataModel"
 import useMessageHandler from "@/hooks/use-message-handler"
 import { cn } from "@/lib/utils"
+import { useUser } from "@clerk/nextjs"
+import BasicLoader from "@/components/loaders/basic-loader"
 
 export default function Page() {
   const iframeRef = useRef<HTMLIFrameElement>(null)
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const { isLoaded } = useUser()
 
   const sceneId = useMemo(
     () => pathname.split("/")[2] as Id<"scenes">,
@@ -20,7 +23,7 @@ export default function Page() {
 
   const result = useQuery({
     query: api.codes.getCode,
-    args: sceneId ? { sceneId } : "skip",
+    args: sceneId && isLoaded ? { sceneId } : "skip",
   })
 
   const incrementResult = useMutation(api.scenes.incrementSceneViews)
@@ -29,15 +32,19 @@ export default function Page() {
     incrementResult({ sceneId })
   }, [sceneId, incrementResult])
 
-  if (result.status === "error") {
-    notFound()
-  }
-
   const data = result.status === "success" ? result.data : undefined
 
   useMessageHandler({ iframeRef, sceneId, code: data?.code, fork: data?.fork })
 
   const embed = searchParams.get("embed") === "true"
+
+  if (!isLoaded) {
+    return <BasicLoader />
+  }
+
+  if (result.status === "error") {
+    notFound()
+  }
 
   return (
     <div className="flex flex-1">

@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -16,10 +15,9 @@ import { toast } from "sonner"
 
 interface ShareDialogProps {
   sceneId: Id<"scenes">
-  isPublic?: boolean
 }
 
-const ShareDialog = ({ sceneId, isPublic }: ShareDialogProps) => {
+const ShareDialog = ({ sceneId }: ShareDialogProps) => {
   const shareUrl = `${window.location.origin}/view/${sceneId}`
   const iframeUrl = `<iframe src="${shareUrl}?embed=true" width="100%" height="400px"></iframe>`
 
@@ -51,12 +49,6 @@ const ShareDialog = ({ sceneId, isPublic }: ShareDialogProps) => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Share Scene</DialogTitle>
-          {!isPublic && (
-            <DialogDescription>
-              This scene is private. Only you can view it until you make it
-              public in settings.
-            </DialogDescription>
-          )}
         </DialogHeader>
         <div>
           <p className="mb-1 text-xs text-muted-foreground">Direct Link:</p>

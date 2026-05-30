@@ -30,12 +30,6 @@ import {
   type MyScenesSortColumn,
   type SortDirection,
 } from "./scenes-utils"
-import Image from "next/image"
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card"
 
 const PAGE_SIZE = 20
 
@@ -142,33 +136,17 @@ export function ScenesTable() {
           {scenes.map((scene) => (
             <TableRow key={scene._id}>
               <TableCell className="max-w-48 font-medium sm:max-w-none">
-                <HoverCard openDelay={100} closeDelay={200}>
-                  <HoverCardTrigger>
-                    <Link
-                      href={`/view/${scene._id}`}
-                      className="hover:text-primary hover:underline"
-                    >
-                      <div className="flex items-center gap-1">
-                        <div className="sm:hidden">
-                          <PublicEye isPublic={scene.public} />
-                        </div>
-                        {scene.name}
-                      </div>
-                    </Link>
-                  </HoverCardTrigger>
-                  <HoverCardContent>
-                    {scene.thumbnailUrl ? (
-                      <Image
-                        width={512}
-                        height={288}
-                        src={scene.thumbnailUrl}
-                        alt={scene.name}
-                      />
-                    ) : (
-                      <div className="text-center">No thumbnail yet</div>
-                    )}
-                  </HoverCardContent>
-                </HoverCard>
+                <Link
+                  href={`/view/${scene._id}`}
+                  className="hover:text-primary hover:underline"
+                >
+                  <div className="flex items-center gap-1">
+                    <div className="sm:hidden">
+                      <PublicEye isPublic={scene.public} />
+                    </div>
+                    {scene.name}
+                  </div>
+                </Link>
                 <div className="text-xs text-muted-foreground sm:hidden">
                   {formatSceneDateTime(scene.updatedAt)}
                   {" - "}
@@ -196,7 +174,11 @@ export function ScenesTable() {
                 </div>
               </TableCell>
               <TableCell className="text-right">
-                <SceneRowActions scene={scene} onDelete={handleDelete} />
+                <SceneRowActions
+                  scene={scene}
+                  thumbnailUrl={scene.thumbnailUrl}
+                  onDelete={handleDelete}
+                />
               </TableCell>
             </TableRow>
           ))}

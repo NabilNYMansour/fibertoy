@@ -6,12 +6,12 @@ import { useMutation, useQuery } from "convex/react"
 import { api } from "../../../convex/_generated/api"
 import { Id } from "@/convex/_generated/dataModel"
 import { toast } from "sonner"
-import SceneSettingsDialog from "./scene-settings-dialog"
+import SceneSettingsDialog from "./dialogs/scene-settings-dialog"
 import { UpdateSceneDataInput } from "@/convex/scenes"
 import PublicEye from "@/components/ui/public-eye"
 import { Separator } from "@/components/ui/separator"
-import SceneInfoDialog from "./scene-info-dialog"
-import ShareDialog from "./share-dialog"
+import SceneInfoDialog from "./dialogs/scene-info-dialog"
+import ShareDialog from "./dialogs/share-dialog"
 import { ErrorBoundary } from "react-error-boundary"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -26,7 +26,7 @@ interface ActionsProps {
 const Actions = ({ pathname }: ActionsProps) => {
   const [open, setOpen] = useState(false)
 
-  const { user } = useUser()
+  const { user, isLoaded } = useUser()
   const updateScene = useMutation(api.scenes.updateScene)
 
   const isView = pathname.includes("/view/")
@@ -36,7 +36,7 @@ const Actions = ({ pathname }: ActionsProps) => {
 
   const sceneData = useQuery(
     api.scenes.getScene,
-    sceneId ? { sceneId } : "skip"
+    sceneId && isLoaded ? { sceneId } : "skip"
   )
 
   const handleSubmit = async (sceneData: UpdateSceneDataInput) => {
@@ -58,13 +58,10 @@ const Actions = ({ pathname }: ActionsProps) => {
   const toggleLikeScene = useMutation(api.scenes.toggleLikeScene)
 
   const handleLike = async () => {
-    if (!user) return
+    if (!user || !sceneId) return
     const toastId = toast.loading("Loading...")
     try {
-      const result = await toggleLikeScene({
-        userId: user.id,
-        sceneId: sceneId!,
-      })
+      const result = await toggleLikeScene({ sceneId })
       toast.success(`${result ? "Liked" : "Unliked"} scene!`, { id: toastId })
     } catch {
       toast.error("Something went wrong", { id: toastId })
@@ -73,7 +70,7 @@ const Actions = ({ pathname }: ActionsProps) => {
 
   const hasLiked = useQuery(
     api.scenes.getUserLikedScene,
-    user?.id && sceneId ? { userId: user.id, sceneId: sceneId } : "skip"
+    user?.id && sceneId ? { sceneId: sceneId } : "skip"
   )
 
   if (isMyScenes)
@@ -116,9 +113,7 @@ const Actions = ({ pathname }: ActionsProps) => {
           <SceneInfoDialog sceneData={sceneData} />
         </>
       )}
-      {sceneData && (
-        <ShareDialog sceneId={sceneId!} isPublic={sceneData.public} />
-      )}
+      {sceneData && sceneData.public && <ShareDialog sceneId={sceneId!} />}
       <Separator orientation="vertical" />
     </div>
   )
