@@ -50,7 +50,7 @@ export default function Page() {
     <div className="flex flex-1">
       <iframe
         ref={iframeRef}
-        src={`http://localhost:5173?embed=${embed}`}
+        src={`${process.env.NEXT_PUBLIC_EDITOR_LINK}?embed=${embed}`}
         className={cn(
           "flex-1 bg-transparent",
           embed && "absolute top-0 h-screen w-screen"
