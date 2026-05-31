@@ -112,6 +112,20 @@ export function App() {
                   onCompile={handleCompile}
                   fork={fork}
                 />
+                <Button
+                  className="absolute bottom-2 left-2 z-100"
+                  size="icon-xs"
+                  variant="outline"
+                  onClick={() => setNoCodeView(!noCodeView)}
+                  title={noCodeView ? "Show code" : "Hide code"}
+                >
+                  <div className="hidden md:block">
+                    {noCodeView ? <ArrowRightFromLine /> : <ArrowLeftToLine />}
+                  </div>
+                  <div className="block md:hidden">
+                    {noCodeView ? <ArrowDownToLine /> : <ArrowUpFromLine />}
+                  </div>
+                </Button>
               </div>
               <div className={cn("h-full", noCodeView ? "w-full" : "sm:w-1/2")}>
                 <LivePreviewWrapper
@@ -134,11 +148,7 @@ interface LivePreviewWrapperProps {
   noCodeView: boolean
 }
 
-function LivePreviewWrapper({
-  previewRef,
-  setNoCodeView,
-  noCodeView,
-}: LivePreviewWrapperProps) {
+function LivePreviewWrapper({ previewRef }: LivePreviewWrapperProps) {
   const { error } = useContext(LiveContext)
   return (
     <div ref={previewRef} className="relative flex h-full w-full">
@@ -151,20 +161,6 @@ function LivePreviewWrapper({
           </div>
         </div>
       )}
-      <Button
-        className="absolute top-1 left-1"
-        size="icon-xs"
-        variant="outline"
-        onClick={() => setNoCodeView(!noCodeView)}
-        title={noCodeView ? "Show code" : "Hide code"}
-      >
-        <div className="hidden md:block">
-          {noCodeView ? <ArrowRightFromLine /> : <ArrowLeftToLine />}
-        </div>
-        <div className="block md:hidden">
-          {noCodeView ? <ArrowDownToLine /> : <ArrowUpFromLine />}
-        </div>
-      </Button>
     </div>
   )
 }
