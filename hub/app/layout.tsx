@@ -8,17 +8,13 @@ import MainHeader from "@/components/layout/header/main-header"
 import ConvexAppProvider from "@/components/providers/convex-provider"
 import { Toaster } from "@/components/ui/sonner"
 import { ui } from "@clerk/ui"
-
-const siteUrl =
-  process.env.NODE_ENV === "production"
-    ? "https://fibertoy.dev"
-    : "http://localhost:3000"
+import { SITE_URL } from "@/lib/consts"
 
 const siteDescription =
   "Build and share React Three Fiber scenes with the world. Create, browse, and publish interactive 3D experiences in the browser."
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "FiberToy",
     template: "%s | FiberToy",
@@ -41,11 +37,18 @@ export const metadata: Metadata = {
     siteName: "FiberToy",
     title: "FiberToy",
     description: siteDescription,
+    images: [
+      {
+        url: "/fibertoy.png",
+        alt: "FiberToy",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "FiberToy",
     description: siteDescription,
+    images: ["/fibertoy.png"],
   },
   robots: {
     index: true,

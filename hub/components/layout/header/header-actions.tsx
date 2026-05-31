@@ -13,7 +13,7 @@ import { Separator } from "@/components/ui/separator"
 import SceneInfoDialog from "./dialogs/scene-info-dialog"
 import ShareDialog from "./dialogs/share-dialog"
 import { ErrorBoundary } from "react-error-boundary"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Globe, Heart } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -72,6 +72,12 @@ const Actions = ({ pathname }: ActionsProps) => {
     api.scenes.getUserLikedScene,
     user?.id && sceneId ? { sceneId: sceneId } : "skip"
   )
+
+  useEffect(() => {
+    if (sceneData) {
+      document.title = sceneData.name
+    }
+  }, [sceneData])
 
   if (isMyScenes)
     return (
