@@ -2,7 +2,7 @@
 
 trap "kill 0" EXIT
 
-(cd editor && bun lint) &
-(cd hub && bun lint)
+(cd editor && bun i) &
+(cd hub && bun i)
 
 wait
