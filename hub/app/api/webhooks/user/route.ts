@@ -6,25 +6,26 @@ export async function POST(req: Request) {
 
   const { type, data } = body
 
-  if (type === "user.updated") {
-    const { username, id: userId } = data
-    try {
+  try {
+    if (type === "user.created") {
+      const { id: userId, username } = data
+      await fetchMutation(api.users.createUser, {
+        userId,
+        username,
+      })
+    } else if (type === "user.updated") {
+      const { username, id: userId } = data
       await fetchMutation(api.users.unprotectedUpdateUserUsername, {
         userId,
         username,
       })
-    } catch (error) {
-      console.error(error)
-      return new Response(null, { status: 500 })
-    }
-  } else if (type === "user.deleted") {
-    const { id: userId } = data
-    try {
+    } else if (type === "user.deleted") {
+      const { id: userId } = data
       await fetchMutation(api.users.unprotectedDeleteUser, { userId })
-    } catch (error) {
-      console.error(error)
-      return new Response(null, { status: 500 })
     }
+  } catch (error) {
+    console.error(error)
+    return new Response(null, { status: 500 })
   }
 
   return new Response(null, { status: 200 })

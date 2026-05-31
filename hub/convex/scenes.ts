@@ -71,17 +71,6 @@ export const updateScene = mutation({
         sceneId: newSceneId,
         code: data.code ?? "",
       })
-      // Lazily create user if not exists
-      const user = await ctx.db
-        .query("users")
-        .withIndex("by_clerkId", (q) => q.eq("clerkId", ownerId))
-        .first()
-      if (!user) {
-        await ctx.db.insert("users", {
-          clerkId: ownerId,
-          username,
-        })
-      }
       return newSceneId
     }
     //---------------- New scene ----------------//

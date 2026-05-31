@@ -1,6 +1,17 @@
 import { mutation } from "./_generated/server"
 import { v } from "convex/values"
 
+export const createUser = mutation({
+  args: {
+    userId: v.string(),
+    username: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const { userId, username } = args
+    await ctx.db.insert("users", { clerkId: userId, username })
+  },
+})
+
 export const unprotectedUpdateUserUsername = mutation({
   args: {
     userId: v.string(),
