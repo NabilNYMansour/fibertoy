@@ -5,6 +5,7 @@ import * as THREE from "three"
 import * as R3F from "@react-three/fiber"
 import * as DREI from "@react-three/drei"
 import * as ZUSTAND from "zustand"
+import * as LEVA from "leva"
 import {
   ArrowDownToLine,
   ArrowLeftToLine,
@@ -20,6 +21,7 @@ const SCOPE = {
   ...R3F,
   ...DREI,
   ...ZUSTAND,
+  ...LEVA,
   glsl: (x: string) => x[0],
 }
 
