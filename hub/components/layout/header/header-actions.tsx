@@ -99,8 +99,10 @@ const Actions = ({ pathname }: ActionsProps) => {
       )}
       {sceneData && !sceneData.readOnly && (
         <>
-          <PublicEye isPublic={!!sceneData.public} />
-          <div className="line-clamp-1 max-w-xs pr-2 text-xs">
+          <div className="w-5">
+            <PublicEye isPublic={!!sceneData.public} />
+          </div>
+          <div className="line-clamp-1 hidden max-w-xs pr-2 text-xs sm:block">
             {sceneData.name}
           </div>
           <SceneSettingsDialog
@@ -113,7 +115,7 @@ const Actions = ({ pathname }: ActionsProps) => {
       )}
       {sceneData?.readOnly && (
         <>
-          <div className="line-clamp-1 max-w-xs pr-2 text-xs">
+          <div className="line-clamp-1 hidden max-w-xs pr-2 text-xs sm:block">
             {sceneData.name}
           </div>
           <SceneInfoDialog sceneData={sceneData} />

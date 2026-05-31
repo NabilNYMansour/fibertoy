@@ -18,7 +18,7 @@ const MainHeader = () => {
         </Link>
         <SearchBar />
       </div>
-      <div className="flex justify-end gap-2">
+      <div className="flex items-center justify-end gap-2">
         {/*==========={Sign in/up and Clerk button}===========*/}
         <div className="flex items-center gap-2">
           <HeaderActions />
@@ -56,7 +56,7 @@ const MainHeader = () => {
         {/*==========={New/Browse}===========*/}
         <Link href={"/new"}>
           <Button size="sm" variant="secondary">
-            <Plus className="hidden sm:block" />
+            <Plus />
             New
           </Button>
         </Link>
