@@ -56,6 +56,13 @@ export const unprotectedDeleteUser = mutation({
       .withIndex("by_ownerId_and_createdAt", (q) => q.eq("ownerId", userId))
       .collect()
     for (const scene of scenes) {
+      const code = await ctx.db
+        .query("codes")
+        .withIndex("by_sceneId", (q) => q.eq("sceneId", scene._id))
+        .first()
+      if (code) {
+        await ctx.db.delete(code._id)
+      }
       await ctx.db.delete(scene._id)
     }
   },
