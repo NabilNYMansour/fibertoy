@@ -113,9 +113,12 @@ export function App() {
                   fork={fork}
                 />
                 <Button
-                  className="absolute bottom-2 left-2 z-100"
-                  size="icon-xs"
-                  variant="outline"
+                  className={cn(
+                    "absolute bottom-2.5 z-100",
+                    noCodeView ? "left-2" : "left-1/2"
+                  )}
+                  size="icon"
+                  variant="secondary"
                   onClick={() => setNoCodeView(!noCodeView)}
                   title={noCodeView ? "Show code" : "Hide code"}
                 >

@@ -39,7 +39,16 @@ function PageMain() {
   const embed = searchParams.get("embed") === "true"
 
   if (!isLoaded) {
-    return <BasicLoader />
+    return (
+      <div
+        className={cn(
+          "flex h-full w-full flex-1 items-center justify-center",
+          embed && "absolute top-0 h-screen w-screen bg-background"
+        )}
+      >
+        <BasicLoader />
+      </div>
+    )
   }
 
   if (result.status === "error") {
@@ -53,7 +62,7 @@ function PageMain() {
         src={`${process.env.NEXT_PUBLIC_EDITOR_LINK}?embed=${embed}`}
         className={cn(
           "flex-1 bg-transparent",
-          embed && "absolute top-0 h-screen w-screen"
+          embed && "absolute top-0 h-screen w-screen bg-background"
         )}
         sandbox="allow-scripts"
       />
