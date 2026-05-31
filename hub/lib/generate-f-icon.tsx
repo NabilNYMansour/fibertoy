@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og"
-import { SITE_URL } from "./consts"
 
-const geistMonoUrl = `${SITE_URL}/geistMono.ttf`
+const geistMonoUrl =
+  "https://fonts.gstatic.com/s/geistmono/v5/or3yQ6H-1_WfwkMZI_qYPLs1a-t7PU0AbeHjL55T.ttf"
 
 let geistMonoPromise: Promise<ArrayBuffer> | null = null
 
@@ -26,7 +26,6 @@ export async function generateFIcon(size: number) {
         fontSize: Math.round(size * 0.68),
         fontWeight: 600,
         fontFamily: "Geist Mono",
-        borderRadius: "100%",
       }}
     >
       F
