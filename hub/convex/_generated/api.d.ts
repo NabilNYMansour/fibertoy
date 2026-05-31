@@ -10,6 +10,7 @@
 
 import type * as codes from "../codes.js";
 import type * as scenes from "../scenes.js";
+import type * as users from "../users.js";
 
 import type {
   ApiFromModules,
@@ -20,6 +21,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   codes: typeof codes;
   scenes: typeof scenes;
+  users: typeof users;
 }>;
 
 /**
