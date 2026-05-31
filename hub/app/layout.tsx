@@ -9,6 +9,7 @@ import ConvexAppProvider from "@/components/providers/convex-provider"
 import { Toaster } from "@/components/ui/sonner"
 import { ui } from "@clerk/ui"
 import { SITE_URL } from "@/lib/consts"
+import { Analytics } from "@vercel/analytics/next"
 
 const siteDescription =
   "Build and share React Three Fiber scenes with the world. Create, browse, and publish interactive 3D experiences in the browser."
@@ -91,6 +92,7 @@ export default function RootLayout({
             </ThemeProvider>
           </ConvexAppProvider>
         </ClerkProvider>
+        <Analytics />
       </body>
     </html>
   )
