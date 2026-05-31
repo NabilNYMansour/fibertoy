@@ -65,5 +65,12 @@ export const unprotectedDeleteUser = mutation({
       }
       await ctx.db.delete(scene._id)
     }
+    const sceneLikes = await ctx.db
+      .query("userSceneLikes")
+      .withIndex("by_userId", (q) => q.eq("userId", userId))
+      .collect()
+    for (const like of sceneLikes) {
+      await ctx.db.delete(like._id)
+    }
   },
 })

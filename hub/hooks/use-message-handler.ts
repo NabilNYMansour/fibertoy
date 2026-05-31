@@ -26,6 +26,7 @@ const useMessageHandler = ({
 }: UseMessageHandlerProps) => {
   const [ready, setReady] = useState(false)
   const lastThumbnailSaveAt = useRef(0)
+  const sentInitialCode = useRef(false)
 
   const router = useRouter()
   const updateScene = useMutation(api.scenes.updateScene)
@@ -94,9 +95,16 @@ const useMessageHandler = ({
   }, [handleSave, sceneId, generateUploadUrl, updateSceneThumbnail, user])
 
   useEffect(() => {
-    if (!iframeRef.current || !ready || code === undefined || code === null) {
+    if (
+      !iframeRef.current ||
+      !ready ||
+      code === undefined ||
+      code === null ||
+      sentInitialCode.current
+    ) {
       return
     }
+    sentInitialCode.current = true
     const win = iframeRef.current.contentWindow
     win?.postMessage(
       { type: "initialize", code, userExists: !!user?.id, fork },

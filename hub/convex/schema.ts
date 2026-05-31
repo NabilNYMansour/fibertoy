@@ -55,6 +55,7 @@ export default defineSchema({
     userId: v.string(),
     sceneId: v.id("scenes"),
   })
+    .index("by_userId", ["userId"])
     .index("by_sceneId", ["sceneId"])
     .index("by_userId_and_sceneId", ["userId", "sceneId"]),
 })
