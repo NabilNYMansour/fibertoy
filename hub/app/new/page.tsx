@@ -28,7 +28,7 @@ export default function Page() {
     <div className="flex flex-1">
       <iframe
         ref={iframeRef}
-        src="http://localhost:5173"
+        src={process.env.NEXT_PUBLIC_EDITOR_LINK}
         className="flex-1 bg-transparent"
         sandbox="allow-scripts"
       />
