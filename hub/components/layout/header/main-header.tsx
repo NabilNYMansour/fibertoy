@@ -57,7 +57,7 @@ const MainHeader = () => {
         <Link href={"/new"}>
           <Button size="sm" variant="secondary">
             <Plus />
-            New
+            <p className="hidden sm:block">New</p>
           </Button>
         </Link>
         <Link href={"/browse"}>
