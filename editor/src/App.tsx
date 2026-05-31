@@ -102,7 +102,7 @@ export function App() {
             <div className="flex h-full w-full flex-col sm:flex-row">
               <div
                 className={cn(
-                  "h-full",
+                  "h-1/2 sm:h-full",
                   noCodeView ? "h-0 w-0" : "border-b sm:w-1/2 sm:border-r"
                 )}
               >
@@ -132,6 +132,7 @@ export function App() {
               </div>
               <div className={cn("h-full", noCodeView ? "w-full" : "sm:w-1/2")}>
                 <LivePreviewWrapper
+                  key={noCodeView.toString()}
                   previewRef={previewRef}
                   setNoCodeView={setNoCodeView}
                   noCodeView={noCodeView}
