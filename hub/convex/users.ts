@@ -76,6 +76,9 @@ export const deleteUser = mutation({
         await ctx.db.delete(code._id)
       }
       await ctx.db.delete(scene._id)
+      if (scene.thumbnailStorageId) {
+        await ctx.storage.delete(scene.thumbnailStorageId)
+      }
     }
     const sceneLikes = await ctx.db
       .query("userSceneLikes")
