@@ -1,4 +1,21 @@
-import { useContext, useEffect, useRef, useState } from "react"
+import {
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  useReducer,
+  useImperativeHandle,
+  useLayoutEffect,
+  useInsertionEffect,
+  useMemo,
+  useCallback,
+  useTransition,
+  useDeferredValue,
+  useDebugValue,
+  useId,
+  useSyncExternalStore,
+  useActionState,
+} from "react"
 import { LiveProvider, LivePreview, LiveContext } from "react-live"
 import CodeEditor from "./components/code-editor"
 import * as THREE from "three"
@@ -22,6 +39,22 @@ const SCOPE = {
   ...DREI,
   ...ZUSTAND,
   ...LEVA,
+  useState,
+  useReducer,
+  useContext,
+  useRef,
+  useImperativeHandle,
+  useEffect,
+  useLayoutEffect,
+  useInsertionEffect,
+  useMemo,
+  useCallback,
+  useTransition,
+  useDeferredValue,
+  useDebugValue,
+  useId,
+  useSyncExternalStore,
+  useActionState,
   glsl: (x: string) => x[0],
 }
 
