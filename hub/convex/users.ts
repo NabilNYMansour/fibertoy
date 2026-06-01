@@ -85,6 +85,10 @@ export const deleteUser = mutation({
       .withIndex("by_userId", (q) => q.eq("userId", userId))
       .collect()
     for (const like of sceneLikes) {
+      const scene = await ctx.db.get(like.sceneId)
+      if (scene) {
+        await ctx.db.patch("scenes", like.sceneId, { likes: scene.likes - 1 })
+      }
       await ctx.db.delete(like._id)
     }
   },
