@@ -1,11 +1,11 @@
+import { SortDirection } from "@/lib/consts"
+
 export type BrowseSortColumn =
   | "name"
   | "updatedAt"
   | "createdAt"
   | "views"
   | "likes"
-
-export type SortDirection = "asc" | "desc"
 
 export function defaultBrowseSortDirection(
   column: BrowseSortColumn

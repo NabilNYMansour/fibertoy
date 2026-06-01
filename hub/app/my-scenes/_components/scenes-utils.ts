@@ -1,3 +1,5 @@
+import { SortDirection } from "@/lib/consts"
+
 export type MyScenesSortColumn =
   | "name"
   | "updatedAt"
@@ -5,8 +7,6 @@ export type MyScenesSortColumn =
   | "public"
   | "views"
   | "likes"
-
-export type SortDirection = "asc" | "desc"
 
 export function defaultMyScenesSortDirection(
   column: MyScenesSortColumn
