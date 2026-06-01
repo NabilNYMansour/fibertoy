@@ -5,20 +5,28 @@ export const createUser = mutation({
   args: {
     userId: v.string(),
     username: v.string(),
+    secret: v.string(),
   },
   handler: async (ctx, args) => {
-    const { userId, username } = args
+    const { userId, username, secret } = args
+    if (secret !== process.env.FIBERTOY_WEBHOOK_SECRET) {
+      throw new Error("Invalid secret")
+    }
     await ctx.db.insert("users", { clerkId: userId, username })
   },
 })
 
-export const unprotectedUpdateUserUsername = mutation({
+export const updateUserUsername = mutation({
   args: {
     userId: v.string(),
     username: v.string(),
+    secret: v.string(),
   },
   handler: async (ctx, args) => {
-    const { userId, username } = args
+    const { userId, username, secret } = args
+    if (secret !== process.env.FIBERTOY_WEBHOOK_SECRET) {
+      throw new Error("Invalid secret")
+    }
     const user = await ctx.db
       .query("users")
       .withIndex("by_clerkId", (q) => q.eq("clerkId", userId))
@@ -37,12 +45,16 @@ export const unprotectedUpdateUserUsername = mutation({
   },
 })
 
-export const unprotectedDeleteUser = mutation({
+export const deleteUser = mutation({
   args: {
     userId: v.string(),
+    secret: v.string(),
   },
   handler: async (ctx, args) => {
-    const { userId } = args
+    const { userId, secret } = args
+    if (secret !== process.env.FIBERTOY_WEBHOOK_SECRET) {
+      throw new Error("Invalid secret")
+    }
     const user = await ctx.db
       .query("users")
       .withIndex("by_clerkId", (q) => q.eq("clerkId", userId))
