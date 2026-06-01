@@ -22,6 +22,7 @@ export type UpdateSceneDataInput = {
 }
 
 export const MAX_CODE_LENGTH = 200_000
+export const MAX_DESCRIPTION_LENGTH = 1000
 export const MAX_NAME_LENGTH = 100
 
 export const updateScene = mutation({
@@ -46,6 +47,10 @@ export const updateScene = mutation({
     //---------------- Name length check ----------------//
     if ((data.name?.length ?? 0) > MAX_NAME_LENGTH) {
       throw new Error("Name too long")
+    }
+    //---------------- Description length check ----------------//
+    if ((data.description?.length ?? 0) > MAX_DESCRIPTION_LENGTH) {
+      throw new Error("Description too long")
     }
     //---------------- Create new scene ----------------//
     const createNewScene = async (
