@@ -3,7 +3,8 @@
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react"
-import type { BrowseSortColumn, SortDirection } from "./browse-utils"
+import type { BrowseSortColumn } from "./browse-utils"
+import { SortDirection } from "@/lib/consts"
 
 const SORT_LABELS: { column: BrowseSortColumn; label: string }[] = [
   { column: "name", label: "Name" },

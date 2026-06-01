@@ -28,8 +28,8 @@ import { SceneRowActions } from "./scene-row-actions"
 import {
   defaultMyScenesSortDirection,
   type MyScenesSortColumn,
-  type SortDirection,
 } from "./scenes-utils"
+import { SortDirection } from "@/lib/consts"
 
 const PAGE_SIZE = 20
 

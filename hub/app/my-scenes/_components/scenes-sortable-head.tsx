@@ -2,7 +2,8 @@
 
 import { TableHead } from "@/components/ui/table"
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react"
-import type { MyScenesSortColumn, SortDirection } from "./scenes-utils"
+import type { MyScenesSortColumn } from "./scenes-utils"
+import { SortDirection } from "@/lib/consts"
 
 export function ScenesSortableHead({
   column,

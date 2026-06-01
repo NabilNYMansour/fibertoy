@@ -11,10 +11,10 @@ import { BrowseSortToggle } from "./browse-sort-toggle"
 import {
   type BrowseSortColumn,
   defaultBrowseSortDirection,
-  type SortDirection,
 } from "./browse-utils"
 import { SceneCard } from "@/components/scene-card"
 import { useSearchParams } from "next/navigation"
+import { SortDirection } from "@/lib/consts"
 
 const PAGE_SIZE = 8
 
