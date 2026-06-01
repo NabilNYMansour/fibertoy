@@ -147,8 +147,8 @@ export function App() {
                 />
                 <Button
                   className={cn(
-                    "absolute bottom-2.5 left-2 z-100",
-                    !noCodeView && "sm:left-1/2"
+                    "absolute bottom-2 left-2 z-100",
+                    !noCodeView && "sm:left-1/2 sm:translate-x-1"
                   )}
                   size="icon"
                   variant="secondary"
