@@ -34,7 +34,7 @@ const SearchBarMain = () => {
         onKeyDown={handleOnKeyDown}
         placeholder="Search"
       />
-      <Link href={route}>
+      <Link href={route} className="flex">
         <Button variant="outline" size="icon-sm" className="border-l-0">
           <Search className="h-4 w-4" />
         </Button>
